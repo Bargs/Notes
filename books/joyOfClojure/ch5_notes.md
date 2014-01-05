@@ -30,3 +30,8 @@ So, *sequential* is a braod category of collection types. A *sequence* is one ki
 When the `seq` function is called on collection-like objects, it returns a seq or `nil` if the collection is empty. Seq will return the original object if it implements the seq API, otherwise it returns a new seq object based on the collection.
 
 Functions that promise to return *seqs* will always return `nil` on empty collections, just like the `seq` function. Functions that promise to return *sequences* (like `rest`, `map`, `filter`) will never return `nil`, only empty sequences.
+
+
+### Equality Partitions
+
+Colletions are placed into three main categories (or "partitions"): sequentials, maps, and sets. These categories affect equality. Two collections will never be equal if they belong to different partitions. Within a partition, equality is defined more loosely. For instance, two sequential collections with the same values in the same order will return true when compared with `=`, even if they are different types of objects (ex. a vector and a list).
