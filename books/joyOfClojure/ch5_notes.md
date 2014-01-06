@@ -47,3 +47,25 @@ Colletions are placed into three main categories (or "partitions"): sequentials,
 ### The Abstraction
 
 Instead of building heavily on cons cells like other Lisps, Clojure has taken the conceptual interface they provide and turned it into the *sequence* abstraction. Clojure provides a vast library of functions that operate on this abstraction. To leverage these functions, all an object needs to do is support the `first` and `rest` functions. You can get a seq representation of any Clojure collection by using the `seq` function. Some collections have multiple seq representations that you can get using other functions.
+
+
+Vectors
+--------------------------
+
+Most frequently used collection in Clojure. 
+
+`vec` is a function that takes a collection and returns a vector.
+
+*primitive vectors* can be created with the `vector-of` function. These are just like any other vector but they store their values as primitives and attempt to coerce any additions to their given type.
+
+As they get larger, vectors and lists perform differently on some operations. Vectors are good at three things compared to lists:
+
+1. Adding or removing things from the right end of the collection
+2. Accessing or changing items in the interior of the collection by numeric index
+3. Walking in reverse order
+
+Accessing or changing an item by index can be done in "essentially" constant time.
+
+You can get an item at an index using `nth`, `get`, or by using the vector as a function (e.g. (vector-name 4)). Values can be changed with `assoc`. Items in nested vectors can be reached with `assoc-in`, `get-in`, and `update-in`.
+
+
