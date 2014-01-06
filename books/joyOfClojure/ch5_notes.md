@@ -68,4 +68,22 @@ Accessing or changing an item by index can be done in "essentially" constant tim
 
 You can get an item at an index using `nth`, `get`, or by using the vector as a function (e.g. (vector-name 4)). Values can be changed with `assoc`. Items in nested vectors can be reached with `assoc-in`, `get-in`, and `update-in`.
 
+### Vectors as stacks
 
+The Clojure equivalent to push and pop for vectors are `conj` and `pop`. These functions operate on the right side of the vector. `pop` returns a new vector with the last item removed, instead of the popped element. You can get the last element from the vector using `peek`. These operations are also "essentially" constant time.
+
+
+### Subvectors
+
+You can efficiently grab a slice from a vector using the `subvec` function. It takes a starting (inclusive) and ending (exclusive) index and returns the subvector described by those fence posts. The `subvec` function is efficient because the subvector holds a reference to the original vector and just does some offset math to provide the correct values.
+
+
+`MapEntry`s are also vectors, which can be useful.
+
+### Things you can't do with vectors
+
+1. Vectors aren't sparse. In other words, you can't have holes at random indexes in your vectors. Any operation that would create such a vector (deleting any index but the rightmost, adding an item to an index past the end) won't work.
+
+2. Vectors cannot be used as queues efficiently (since efficient operations only happen on the end of the vector, not the beginning). Use a `PersistentQueue` if you want that.
+
+3. Vectors should not be used as sets. The `contains?` function only checks for the existence of keys (for a vector, an index) not values.
