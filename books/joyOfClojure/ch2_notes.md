@@ -7,7 +7,7 @@ Chapter 2 Drinking from the Clojure Firehose
 `()` - List  
 `[]` - Vector  
 `{}` - Map  
-`\#{}` - Set  
+`#{}` - Set  
 
 
 2.5 Functions
