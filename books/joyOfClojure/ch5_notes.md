@@ -37,7 +37,7 @@ This distinction doesn't make sense to me yet. A later section states the follow
 
 Which is basically the definition for *a seq* laid out earlier. So I still need some clarification on their distincition between a *seq* and a *sequence*.
 
-From furthur research, *seq* vs *sequence* doesn't seem to be a normal distinction in Clojure. This [clojure.org doc][http://clojure.org/sequences] uses the terms interchangably.
+From furthur research, *seq* vs *sequence* doesn't seem to be a normal distinction in Clojure. This [clojure.org doc](http://clojure.org/sequences) uses the terms interchangably.
 
 ### Equality Partitions
 
