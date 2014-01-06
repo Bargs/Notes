@@ -37,6 +37,8 @@ This distinction doesn't make sense to me yet. A later section states the follow
 
 Which is basically the definition for *a seq* laid out earlier. So I still need some clarification on their distincition between a *seq* and a *sequence*.
 
+From furthur research, *seq* vs *sequence* doesn't seem to be a normal distinction in Clojure. This [clojure.org doc][http://clojure.org/sequences] uses the terms interchangably.
+
 ### Equality Partitions
 
 Colletions are placed into three main categories (or "partitions"): sequentials, maps, and sets. These categories affect equality. Two collections will never be equal if they belong to different partitions. Within a partition, equality is defined more loosely. For instance, two sequential collections with the same values in the same order will return true when compared with `=`, even if they are different types of objects (ex. a vector and a list).
