@@ -25,13 +25,23 @@ Clojure has a set of very similar sounding terms that each have distinct, precis
 * seq - Simple API for navigating collections (first, rest, nil and ())
 * `clojure.core/seq` - A function that returns an object implementing the seq API
 
-So, *sequential* is a braod category of collection types. A *sequence* is one kind of sequential. And *a seq* is any object that implements the *seq API*.
+So, *sequential* is a braod category of collection types. A *sequence* is one kind of sequential. And *a seq* is any object that implements the *seq API*. 
 
 When the `seq` function is called on collection-like objects, it returns a seq or `nil` if the collection is empty. Seq will return the original object if it implements the seq API, otherwise it returns a new seq object based on the collection.
 
 Functions that promise to return *seqs* will always return `nil` on empty collections, just like the `seq` function. Functions that promise to return *sequences* (like `rest`, `map`, `filter`) will never return `nil`, only empty sequences.
 
+This distinction doesn't make sense to me yet. A later section states the following:
+
+> All an object needs to do to be a sequence is to support the two core functions: `first` and `rest`.
+
+Which is basically the definition for *a seq* laid out earlier. So I still need some clarification on their distincition between a *seq* and a *sequence*.
 
 ### Equality Partitions
 
 Colletions are placed into three main categories (or "partitions"): sequentials, maps, and sets. These categories affect equality. Two collections will never be equal if they belong to different partitions. Within a partition, equality is defined more loosely. For instance, two sequential collections with the same values in the same order will return true when compared with `=`, even if they are different types of objects (ex. a vector and a list).
+
+
+### The Abstraction
+
+Instead of building heavily on cons cells like other Lisps, Clojure has taken the conceptual interface they provide and turned it into the *sequence* abstraction. Clojure provides a vast library of functions that operate on this abstraction. To leverage these functions, all an object needs to do is support the `first` and `rest` functions. You can get a seq representation of any Clojure collection by using the `seq` function. Some collections have multiple seq representations that you can get using other functions.
