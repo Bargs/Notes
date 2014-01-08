@@ -77,7 +77,7 @@ The Clojure equivalent to push and pop for vectors are `conj` and `pop`. These f
 
 You can efficiently grab a slice from a vector using the `subvec` function. It takes a starting (inclusive) and ending (exclusive) index and returns the subvector described by those fence posts. The `subvec` function is efficient because the subvector holds a reference to the original vector and just does some offset math to provide the correct values.
 
-
+	
 `MapEntry`s are also vectors, which can be useful.
 
 ### Things you can't do with vectors
@@ -87,3 +87,26 @@ You can efficiently grab a slice from a vector using the `subvec` function. It t
 2. Vectors cannot be used as queues efficiently (since efficient operations only happen on the end of the vector, not the beginning). Use a `PersistentQueue` if you want that.
 
 3. Vectors should not be used as sets. The `contains?` function only checks for the existence of keys (for a vector, an index) not values.
+
+
+Lists
+--------------------------
+
+Lists are used almost exclusively to represent Clojure code. As a data type, they offer little value over vectors.
+
+In Clojure, the right way to add an element to the front of a list is `conj`, not `cons`. `cons` will work, but `conj` will always pick the most efficient way to add an element to any collection type. Also, `cons` doesn't guarentee that its result will be a list, but only some kind of seq.
+
+**Note**
+> All seqs print with rounded parentheses, but this does not mean they’re the same type or will behave the same way.
+
+### Things you shouldn't do with lists
+
+1. Don't look up values by index. Lists aren't optimized for indexed lookups like vectors, so they're always O(n)
+
+2. Don't use them as sets. Same arguments from the vector section apply.
+
+3. Don't use them as queues. You can't even remove items from the right side.
+
+
+Persistent Queues
+--------------------------
