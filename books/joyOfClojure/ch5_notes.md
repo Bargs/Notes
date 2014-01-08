@@ -25,7 +25,7 @@ Clojure has a set of very similar sounding terms that each have distinct, precis
 * seq - Simple API for navigating collections (first, rest, nil and ())
 * `clojure.core/seq` - A function that returns an object implementing the seq API
 
-So, *sequential* is a braod category of collection types. A *sequence* is one kind of sequential. And *a seq* is any object that implements the *seq API*. 
+So, *sequential* is a braod category of collection types. A *sequence* is one kind of sequential. And *a seq* is any object that implements the *seq API*.
 
 When the `seq` function is called on collection-like objects, it returns a seq or `nil` if the collection is empty. Seq will return the original object if it implements the seq API, otherwise it returns a new seq object based on the collection.
 
@@ -52,7 +52,7 @@ Instead of building heavily on cons cells like other Lisps, Clojure has taken th
 Vectors
 --------------------------
 
-Most frequently used collection in Clojure. 
+Most frequently used collection in Clojure.
 
 `vec` is a function that takes a collection and returns a vector.
 
@@ -77,7 +77,7 @@ The Clojure equivalent to push and pop for vectors are `conj` and `pop`. These f
 
 You can efficiently grab a slice from a vector using the `subvec` function. It takes a starting (inclusive) and ending (exclusive) index and returns the subvector described by those fence posts. The `subvec` function is efficient because the subvector holds a reference to the original vector and just does some offset math to provide the correct values.
 
-	
+
 `MapEntry`s are also vectors, which can be useful.
 
 ### Things you can't do with vectors
@@ -110,3 +110,9 @@ In Clojure, the right way to add an element to the front of a list is `conj`, no
 
 Persistent Queues
 --------------------------
+
+Immutable queue objects. You create one by adding to the provided empty queue object: `clojure.lang.PersistentQueue/EMPTY`
+
+Always use the functions designed for use with queues: `peek`, `pop`, and `conj`. Functions like `rest` and `next` will work, but not as expected because they'll return seqs not queues.
+
+Clojure queues are implemented with a seq in the front and a vector in the back to take advantage of each collection's strengths (removal from the left for a seq, addition to the right for a vector). When the seq runs dry the vector is wrapped in a seq and a new empty vector is added to the end.
