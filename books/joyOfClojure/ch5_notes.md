@@ -130,3 +130,15 @@ Be careful adding items to sorted sets, non comparable elements will cause an ex
 Sets are implemented as maps with the same element for the key and value.
 
 Clojure provides typical set operations (`intersection`, `union`, `difference`) in the `clojure.set` namespace.
+
+
+Maps
+--------------------------
+
+Clojure has unordered hash maps. They can be used as functions like sets and vectors, in which case they are a function of their keys. Keys and values are heterogeneous.
+
+Sorted maps are available via the `sorted-map` and `sorted-map-by` functions.
+
+Uniqueness of keys in sorted maps is based on the comparison function. So if you add a value to a map for a key which is deemed equal with an existing key (even if it's not the same concrete type), it will replace the value for the existing key instead of adding a new map entry.
+
+Preservation of insertion order can be achived by using an array map, created with `array-map`.
