@@ -116,3 +116,15 @@ Immutable queue objects. You create one by adding to the provided empty queue ob
 Always use the functions designed for use with queues: `peek`, `pop`, and `conj`. Functions like `rest` and `next` will work, but not as expected because they'll return seqs not queues.
 
 Clojure queues are implemented with a seq in the front and a vector in the back to take advantage of each collection's strengths (removal from the left for a seq, addition to the right for a vector). When the seq runs dry the vector is wrapped in a seq and a new empty vector is added to the end.
+
+
+Persistent Sets
+--------------------------
+
+You can retrieve a value from a set by calling the set as a function or using the `get` function (much like with vectors). Because they can be applied as functions, sets make convenient predicates for the `some` function which returns the first item in a collection which returns a truthy value when the supplied predicate is applied to it.
+
+Uniqueness in a set is based on equality `=`.
+
+Be careful adding items to sorted sets, non comparable elements will cause an exception to be thrown.
+
+Sets are implemented as maps with the same element for the key and value.
