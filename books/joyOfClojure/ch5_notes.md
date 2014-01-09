@@ -128,3 +128,5 @@ Uniqueness in a set is based on equality `=`.
 Be careful adding items to sorted sets, non comparable elements will cause an exception to be thrown.
 
 Sets are implemented as maps with the same element for the key and value.
+
+Clojure provides typical set operations (`intersection`, `union`, `difference`) in the `clojure.set` namespace.
