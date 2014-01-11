@@ -28,7 +28,10 @@ Clojure is partially lazy. This is another way Clojure combats memory utilizatio
 
 It can be useful to make your own functions lazy. If you want to do that, you should follow this recipe:
 
-1. Use the lazy-seq macro at the outermost level of your lazy sequence producing expression(s).
+1. Use the `lazy-seq` macro at the outermost level of your lazy sequence producing expression(s). `lazy-seq` returns a seq that realizes its values only as needed. Need to look into this more... book doesn't give a lot of detail on how this works.
+
 2. If you happen to be consuming another sequence during your operations, then use `rest` instead of `next`. `next` will eagerly "realize" the first element of its result to see if the seq is empty. `rest` doesn't need to do this check.
+
 3. Prefer higher-order functions when processing sequences.
-4. Don’t hold onto your head.
+
+4. Don’t hold onto your head. Clojure can GC portions of your seq that are no longer reachable. This can help you avoid out of memory errors when working with especially large data sets. However, if you hold onto the head of your seq (usually bound to a local) Clojure can't GC any part of the seq. If you perform a calculation that needs a value at the end of the seq, you'll end up holding the entire data structure in memory. This defeats the main purpose of laziness, which is "to prevent the full realization of iterim results during a calculation".
