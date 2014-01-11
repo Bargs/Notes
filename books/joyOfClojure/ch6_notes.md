@@ -35,3 +35,6 @@ It can be useful to make your own functions lazy. If you want to do that, you sh
 3. Prefer higher-order functions when processing sequences.
 
 4. Don’t hold onto your head. Clojure can GC portions of your seq that are no longer reachable. This can help you avoid out of memory errors when working with especially large data sets. However, if you hold onto the head of your seq (usually bound to a local) Clojure can't GC any part of the seq. If you perform a calculation that needs a value at the end of the seq, you'll end up holding the entire data structure in memory. This defeats the main purpose of laziness, which is "to prevent the full realization of iterim results during a calculation".
+
+
+Lazy sequences allow you to work with infinite sequences. These guys are nice because they allow you define a sequence once, and reuse it in all sorts of scenarios. Unlike a non-lazy sequence that necessairly has a max value, you'll never find yourself needing more values and having to recalculate the sequence. Infinite sequences can give you any value you need.
