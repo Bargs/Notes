@@ -1,8 +1,8 @@
 Chapter 6 Immutability and Laziness
 ===================================
 
-> Needs more detail on how `lazy-seq` works
-> Needs more detail on the distinction between immutability and persistence
+> * Needs more detail on how `lazy-seq` works
+> * Needs more detail on the distinction between immutability and persistence
 
 Immutability
 -----------------------------------
