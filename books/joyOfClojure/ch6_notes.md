@@ -38,3 +38,6 @@ It can be useful to make your own functions lazy. If you want to do that, you sh
 
 
 Lazy sequences allow you to work with infinite sequences. These guys are nice because they allow you define a sequence once, and reuse it in all sorts of scenarios. Unlike a non-lazy sequence that necessairly has a max value, you'll never find yourself needing more values and having to recalculate the sequence. Infinite sequences can give you any value you need.
+
+
+Clojure sequences are lazy but Clojure in general is not. However, you can explicitly delay the evaluation of an expression using the `delay` macro and later invoke the evaluation with the `force` function. You could achieve mostly the same result by passing a thunk, but `delay` also caches the result of its expression and enables the use of `delay?` to check whether the evaluation of an express has been explicitly delayed.
