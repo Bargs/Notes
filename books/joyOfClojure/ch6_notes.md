@@ -1,6 +1,9 @@
 Chapter 6 Immutability and Laziness
 ===================================
 
+> Needs more detail on how `lazy-seq` works
+> Needs more detail on the distinction between immutability and persistence
+
 Immutability
 -----------------------------------
 
@@ -41,3 +44,5 @@ Lazy sequences allow you to work with infinite sequences. These guys are nice be
 
 
 Clojure sequences are lazy but Clojure in general is not. However, you can explicitly delay the evaluation of an expression using the `delay` macro and later invoke the evaluation with the `force` function. You could achieve mostly the same result by passing a thunk, but `delay` also caches the result of its expression and enables the use of `delay?` to check whether the evaluation of an express has been explicitly delayed.
+
+See `ch6_exercise.clj` for an example of a lazy quick sort. The implementation demostrates the power of laziness when it's fully embraced. This quick sort will only do as much work as needed to obtain the requested result. When you only need the beginning of a very large unsorted collection, this can save a lot on time and memory.
