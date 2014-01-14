@@ -7,3 +7,4 @@
 
 ((fnth 5) '[a b c d e])
 
+((partial + 5) 100 200)
