@@ -8,7 +8,7 @@ Functions are first class in Clojure. What makes something first class?
 * It can be passed as an argument to a function.
 * It can be returned as the value of a function.
 
-## Creating functions on demand
+### Creating functions on demand
 
 **Note**
 > What does `apply` do? It calls the function passed as its first argument with the collection of arguments passed as its second argument. Essentially it allows you to pass a variable number of arguments if you don't know how many will be passed at compile time.
@@ -25,10 +25,24 @@ Functions are first class in Clojure. What makes something first class?
 You can build the *complement* of a function using `complement`. This guy simply takes a function that returns a truthy value and builds a function that always returns the opposite truthy value for any given input.
 
 
-## Functions as arguments
+### Functions as arguments
 
 Being able to pass functions as arguments is much better than having to rely on callback objects like you do in Java.
 
 `sort-by` is a good example of the use of function args. In addition to a list to sort it can take a function argument that will be used to pre-process each list item. The sort will occur on the result of the application of this function to each list item. This can help when dealing with nested lists or heterogeneous lists of non-mutually comparable types.
 
 The ability to pass functions as arguments allows you to build your logic on top of existing parts. This let's you focus on your application *instead of worrying about re-implementing core functionality*.
+
+
+## Pure functions
+
+What is a *pure function*?
+
+* Always returns the same result, given the same arguments.
+* Doesn't cause any observable side effects.
+
+Why should you strive to use pure functions wenever possible?
+
+1. [Referential transparency][1]. Pure functions are said to be referentially transparent, which means that the function could be replaced by its result without changing the behaviour of the program. This is only true because pure functions are unaffected by time, the same arguments will always produce the same results. Referential transparency helps the programmer and compiler reason about the code.
+
+[1]: http://en.wikipedia.org/wiki/Referential_transparency_(computer_science)
