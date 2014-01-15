@@ -1,6 +1,8 @@
 Chapter 7 Functional Programming
 ============================================
 
+## First Class Functions
+
 Functions are first class in Clojure. What makes something first class?
 
 * It can be created on demand.
