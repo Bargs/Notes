@@ -1,7 +1,10 @@
 Chapter 7 Functional Programming
 ============================================
 
-## First Class Functions
+All About Functions
+--------------------------------------------
+
+### First Class Functions
 
 Functions are first class in Clojure. What makes something first class?
 
@@ -10,7 +13,7 @@ Functions are first class in Clojure. What makes something first class?
 * It can be passed as an argument to a function.
 * It can be returned as the value of a function.
 
-### Creating functions on demand
+#### Creating functions on demand
 
 **Note**
 > What does `apply` do? It calls the function passed as its first argument with the collection of arguments passed as its second argument. Essentially it allows you to pass a variable number of arguments if you don't know how many will be passed at compile time.
@@ -27,7 +30,7 @@ Functions are first class in Clojure. What makes something first class?
 You can build the *complement* of a function using `complement`. This guy simply takes a function that returns a truthy value and builds a function that always returns the opposite truthy value for any given input.
 
 
-### Functions as arguments
+#### Functions as arguments
 
 Being able to pass functions as arguments is much better than having to rely on callback objects like you do in Java.
 
@@ -36,7 +39,7 @@ Being able to pass functions as arguments is much better than having to rely on 
 The ability to pass functions as arguments allows you to build your logic on top of existing parts. This let's you focus on your application *instead of worrying about re-implementing core functionality*.
 
 
-## Pure functions
+### Pure functions
 
 What is a *pure function*?
 
@@ -50,15 +53,19 @@ Why should you strive to use pure functions wenever possible?
 [1]: http://en.wikipedia.org/wiki/Referential_transparency_(computer_science)
 
 
-## Named arguments
+### Named arguments
 
 Named and default arguments can be created by using destructuring.
 
 
-## Pre and post conditions
+### Pre and post conditions
 
 Clojure's `defn` allows you to assign pre and post conditions to a function. This is done by adding a map with `:pre` and `:post` keys in the function body. Each map entry value is a vector with a list of functions that all must return true, otherwise the function application will throw an `AssertionError`. You can also manually call `assert` to get similar functionality on an ad hoc basis.
 
 These constraints can also be decoupled from the function body they are to be applied to. This is done by creating a higher order function that takes a function and its arguments as parameters and in its body simply calling that function. Then you add the constraints (the :pre and :post map) to this new function. Doing this allows for constraints specific to your use case without restricting how others use the main function. This can be a good way to remove business logic from functions that might otherwise be reusable.
 
 These detached constraints can be thought of as *aspects*.
+
+
+Closures
+============================================
