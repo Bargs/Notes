@@ -48,3 +48,17 @@ Why should you strive to use pure functions wenever possible?
 1. [Referential transparency][1]. Pure functions are said to be referentially transparent, which means that the function could be replaced by its result without changing the behaviour of the program. This is only true because pure functions are unaffected by time, the same arguments will always produce the same results. Referential transparency helps the programmer and compiler reason about the code.
 
 [1]: http://en.wikipedia.org/wiki/Referential_transparency_(computer_science)
+
+
+## Named arguments
+
+Named and default arguments can be created by using destructuring.
+
+
+## Pre and post conditions
+
+Clojure's `defn` allows you to assign pre and post conditions to a function. This is done by adding a map with `:pre` and `:post` keys in the function body. Each map entry value is a vector with a list of functions that all must return true, otherwise the function application will throw an `AssertionError`. You can also manually call `assert` to get similar functionality on an ad hoc basis.
+
+These constraints can also be decoupled from the function body they are to be applied to. This is done by creating a higher order function that takes a function and its arguments as parameters and in its body simply calling that function. Then you add the constraints (the :pre and :post map) to this new function. Doing this allows for constraints specific to your use case without restricting how others use the main function. This can be a good way to remove business logic from functions that might otherwise be reusable.
+
+These detached constraints can be thought of as *aspects*.
