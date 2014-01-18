@@ -69,3 +69,14 @@ These detached constraints can be thought of as *aspects*.
 
 Closures
 ============================================
+
+What's a *closure*?
+
+> In a sentence, a closure is a function that has access to locals from the context where it was created.
+
+Basically a closure is a function that uses a local variable that was in scope at the time of the function's creation, but was defined outside of the function's body. The function is said to "close over" the variable.
+
+Closures can be useful as arguments to higher-order functions. They can also get interesting when they close over objects with mutable state.
+
+Closures can be used to build 'objects', bundling functions with the data they work on, by having multiple closures share the same environment. This could be done by creating a map with values that are both data and closures that work on that data. You can even implement a form of polymorphism by creating maps with the same keys but closures that do different things. However, Clojure has higher level concepts to handle some of this stuff so it's not necessary to create a bunch of ad hoc solutions.
+
