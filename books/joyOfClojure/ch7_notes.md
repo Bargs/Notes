@@ -80,3 +80,11 @@ Closures can be useful as arguments to higher-order functions. They can also get
 
 Closures can be used to build 'objects', bundling functions with the data they work on, by having multiple closures share the same environment. This could be done by creating a map with values that are both data and closures that work on that data. You can even implement a form of polymorphism by creating maps with the same keys but closures that do different things. However, Clojure has higher level concepts to handle some of this stuff so it's not necessary to create a bunch of ad hoc solutions.
 
+
+Thinking Recursively
+============================================
+
+Recursion is fun, but you can run into stack overflows when working with large values. Clojure provides some ways to deal with this.
+
+Replacing *mundane* recursion with *tail recursion* that uses the `recur` form will help you avoid growing the stack. Usually a solution using regular recursion will be more clear and concise though. If you're working with seqs, being lazy might allow you to use regular recursion without running into stack overflows.
+
