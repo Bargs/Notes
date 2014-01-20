@@ -31,3 +31,17 @@
 (deDupe noDupes)
 (deDupe allDupes)
 
+
+;; Solution with tail recursion
+
+(defn tailDeDupe [items]
+  (letfn [(deDuper [items acc]
+    (if (not (seq items))
+      acc
+      (recur (remove #(= (first items) %) items) (conj acc (first items)))))]
+    (deDuper items [])))
+
+(tailDeDupe testData)
+(tailDeDupe emptyList)
+(tailDeDupe noDupes)
+(tailDeDupe allDupes)
