@@ -68,7 +68,7 @@ These detached constraints can be thought of as *aspects*.
 
 
 Closures
-============================================
+--------------------------------------------
 
 What's a *closure*?
 
@@ -82,9 +82,30 @@ Closures can be used to build 'objects', bundling functions with the data they w
 
 
 Thinking Recursively
-============================================
+--------------------------------------------
 
 Recursion is fun, but you can run into stack overflows when working with large values. Clojure provides some ways to deal with this.
 
 Replacing *mundane* recursion with *tail recursion* that uses the `recur` form will help you avoid growing the stack. Usually a solution using regular recursion will be more clear and concise though. If you're working with seqs, being lazy might allow you to use regular recursion without running into stack overflows.
 
+### Tail calls and recur
+
+*Generalized tail-call optimization* works on any function call in the tail position. Clojure **does not provide generalized TCO** because java bytecode does not support it. The `recur` special form will only optimize self-calls in the tail position, not the general case.
+
+You must explicitly use `recur` to benefit from tail call optimization. Even if a self-call is in tail position, it will not be optimized unless you use the `recur` special form. This is a design choice rather than a technical limitation. Why?
+
+1. Using `recur` reminds the developer that Clojure does not provide general TCO.
+
+2. Forcing the use of `recur` allows Clojure to detect errors when the developer thinks a call is in tail position, but is not. Without `recur` the call might be silently unoptimized.
+
+3. `recur` allows `fn` and `loop` to act as anonymous recursion points instead of needing a name to reference.
+
+### The trampoline
+
+Mutually recursive calls can also be optimized to avoid stack overflows, though not with `recur`. You must follow a couple of rigid rules to gain this benefit:
+
+1. Make all of the functions participating in the mutual recursion return a function instead of their normal result. Normally this is as simple as tacking a # onto the front of the outer level of the function body.
+
+2. Invoke the first function in the mutual chain via the trampoline function.
+
+The `trampoline` function optimizes mutual recursion by manually managing the stack instead of allowing mundane recursion to do the work. The book doesn't provide a ton of explanation, but my understanding is that this works because each function taking part in the recursion returns an anonymous function instead of immediately recurring. Allowing the function to return will pop it off the stack and then its resources can be deallocated. Then `trampoline` can go ahead and call the anonymous function, continuing the recursion. See `ch7_exercises.clj` for an example.
