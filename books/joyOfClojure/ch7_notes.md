@@ -121,3 +121,6 @@ CPS breaks down a problem into three parts:
 2. A return continuation that’s used to wrap the return values
 
 3. A continuation function used to provide the next step in the computation
+
+
+However, CPS isn't often used in Clojure for reasons listed in the book.
