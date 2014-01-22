@@ -87,3 +87,46 @@
 (elevator [:close :open :close :up :open :open :done])
 
 (elevator [:close :up :open :close :down :open :done])
+
+
+;; Continuation Passing Style
+
+
+;; Factorial in CPS
+(defn fac-cps [n k]
+  (letfn [(cont [v] (k (* v n)))]
+    (if (zero? n)
+      (k 1)
+      (recur (dec n) cont))))
+
+(defn fac [n]
+  (fac-cps n identity))
+
+(fac 10)
+
+
+
+(defn mk-cps [accept? kend kont]
+  (fn [n]
+    ((fn [n k]
+       (let [cont (fn [v]
+                    (k ((partial kont v) n)))]
+         (if (accept? n)
+           (k 1)
+           (recur (dec n) cont))))
+     n kend)))
+
+
+(def fac
+  (mk-cps zero?
+          identity
+          #(* %1 %2)))
+
+(fac 10)
+
+(def tri
+  (mk-cps #(== 1 %)
+          identity
+          #(+ %1 %2)))
+
+(tri 10)

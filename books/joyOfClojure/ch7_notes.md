@@ -109,3 +109,15 @@ Mutually recursive calls can also be optimized to avoid stack overflows, though 
 2. Invoke the first function in the mutual chain via the trampoline function.
 
 The `trampoline` function optimizes mutual recursion by manually managing the stack instead of allowing mundane recursion to do the work. The book doesn't provide a ton of explanation, but my understanding is that this works because each function taking part in the recursion returns an anonymous function instead of immediately recurring. Allowing the function to return will pop it off the stack and then its resources can be deallocated. Then `trampoline` can go ahead and call the anonymous function, continuing the recursion. See `ch7_exercises.clj` for an example.
+
+### Continuation-Passing Style (CPS)
+
+The book gives a small overview of CPS, a style of programming common with functional languages. CPS is interesting because it can be used to create generic function builders. The same general computational structure can take different function arguments to produce new functions that do all sorts of different things, which allows for a great deal of reuse. See `ch7_exercises.clj` for an example.
+
+CPS breaks down a problem into three parts:
+
+1. An accept function that decides when a computation should terminate
+
+2. A return continuation that’s used to wrap the return values
+
+3. A continuation function used to provide the next step in the computation
