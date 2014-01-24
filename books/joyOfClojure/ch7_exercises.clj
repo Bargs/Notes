@@ -235,3 +235,6 @@
                             (let [[y x] w]
                               [(total-cost newcost step-est size y x) w]))
                           nbr-yxs)))))))))
+
+
+(astar [0 0] 900 world)
