@@ -38,3 +38,17 @@ Things to think about when writing your own macros:
 * Use macroexpand , macroexpand-1 , and clojure.walk/macroexpand-all 4 liberally to understand how your implementation works.
 * Experiment at the REPL.
 * Break complicated macros into smaller functions whenever possible.
+
+
+Defining Control Structures
+--------------------------------------------
+
+Most macros in Clojure are defined using macros. Other languages like Haskell use higher order functions instead of macros. One advantage of macros is that they manipulate compile-time forms.
+
+
+### Defining control structures without syntax-quote
+
+See example in `ch8_exercises.clj`
+
+
+### Defining control structures with syntax-quote and unquoting

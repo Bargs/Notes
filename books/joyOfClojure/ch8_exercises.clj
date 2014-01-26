@@ -37,3 +37,38 @@
   (println ``~y)
   (println ``~~y)
   (contextual-eval {'x 36} ``~~y))
+
+
+;; 8.2 Defining Control Structures
+
+;; 8.2.1 Defining structures without syntax-quote
+
+;; Macro that takes a list of expressions (paired) and executes
+;; every even expression as long as the odd expression before it
+;; is truthy.
+;;
+;; Works by building up nested lists of whens.
+;;
+(defmacro do-until [& clauses]
+  (when clauses
+    (list 'clojure.core/when (first clauses)
+          (if (next clauses)
+            (second clauses)
+            (throw (IllegalArgumentException.
+                    "do-until requires an even number of forms")))
+          (cons 'do-until (nnext clauses)))))
+
+(do-until
+ (even? 2) (println "Even")
+ (odd? 3) (println "Odd")
+ (zero? 1) (println "You never see me")
+ :lollipop (println "Truthy thing"))
+
+(macroexpand-1 '(do-until true (prn 1) false (prn 2)))
+
+(require '[clojure.walk :as walk])
+
+;; do-until recursively expands into a series of when calls
+;; which themselves expand into a series of if expressions
+;;(because when itself is a macro defined in terms of the built-in if ):
+(walk/macroexpand-all '(do-until true (prn 1 ) false (prn 2)))
