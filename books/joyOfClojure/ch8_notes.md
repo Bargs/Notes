@@ -23,3 +23,18 @@ From the Clojure docs:
 > For Lists/Vectors/Sets/Maps, syntax-quote establishes a template of the corresponding data structure. Within the template, unqualified forms behave as if recursively syntax-quoted, but forms can be exempted from such recursive quoting by qualifying them with unquote or unquote-splicing, in which case they will be treated as expressions and be replaced in the template by their value, or sequence of values, respectively.
 
 Quoting and unquoting can be used outside of macros to manipulate code at runtime (see section 8.1.1 in `ch8_exercises.clj` for an example). However, you'll most often see syntax quoting inside the body of macros.
+
+**Note**
+> Things can get interesting if you have nested syntax-quotes. See some examples in `ch8_exercises.clj`.
+
+
+### Macro rules of thumb
+
+Things to think about when writing your own macros:
+
+* Don’t write a macro if a function will do. Reserve macros to provide syntactic abstractions or create binding forms.
+* Write an example usage.
+* Expand your example usage by hand.
+* Use macroexpand , macroexpand-1 , and clojure.walk/macroexpand-all 4 liberally to understand how your implementation works.
+* Experiment at the REPL.
+* Break complicated macros into smaller functions whenever possible.

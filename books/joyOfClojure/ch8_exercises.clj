@@ -26,3 +26,14 @@
 ;;      "The bindings created use the interesting `'~v pattern
 ;;       to garner the value of the built bindings at runtime."
 ;; Could use some more explanation.
+
+
+
+;; An example of dealing with nested syntax quotes. Note the
+;; one to one relationship between syntax quotes and unquotes.
+(let [x 9, y '(- x)]
+  (println `y)
+  (println ``y)
+  (println ``~y)
+  (println ``~~y)
+  (contextual-eval {'x 36} ``~~y))
