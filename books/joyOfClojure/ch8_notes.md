@@ -1,7 +1,7 @@
 Chapter 8 Macros
 ============================================
 
-Macros take advantage of the data-is-code-is-data philosophy. Most of their work is done at compile time.
+Macros take advantage of the data-is-code-is-data philosophy. Most of their work is done at compile time. Macros are expanded to the form that they return at compile time. Note that as a result, macros cannot be called with a list of arguments. The number of arguments must be known at compile time so that the expansion can be done.
 
 What are macros good for? Some things: transforming one expression into another form (e.g. the `->` macro), combining forms, changing forms, controlling evaluation and resolution of arguments, managing resources, and building functions.
 
