@@ -72,3 +72,16 @@
 ;; which themselves expand into a series of if expressions
 ;;(because when itself is a macro defined in terms of the built-in if ):
 (walk/macroexpand-all '(do-until true (prn 1 ) false (prn 2)))
+
+
+;; 8.2.2 Defining structures using syntax-quote and unquote
+
+(defmacro unless [condition & body]
+  `(if (not ~condition)
+     (do ~@body)))
+
+(unless true "nope")
+
+(unless false "yep")
+
+(macroexpand-1 '(unless (even? 3) (odd? 3)))
