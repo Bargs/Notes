@@ -85,3 +85,20 @@
 (unless false "yep")
 
 (macroexpand-1 '(unless (even? 3) (odd? 3)))
+
+
+;; See how things can break if you forget to unquote condition
+
+;; condition is treated as any other symbol in a syntax-quote instead
+;; of being evaluated.
+(macroexpand `(if (not condition) "got it"))
+
+;; So the macro will return a form that includes the condition symbol
+;; instead of its local value from the macro application. When the new
+;; form is evaluated if will attempt to find the value of condition.
+(eval `(if (not condition) "got it"))
+
+;; This could cause subtle problems if condition is bound elsewhere in
+;; the application
+(def condition false)
+(eval `(if (not condition) "got it"))
