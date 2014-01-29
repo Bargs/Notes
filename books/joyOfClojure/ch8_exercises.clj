@@ -102,3 +102,22 @@
 ;; the application
 (def condition false)
 (eval `(if (not condition) "got it"))
+
+
+;; 8.3 Macros Combining Forms
+
+;; Say you wanted to call a function every time certain vars are rebound to different values
+;; This would require the same boilerplate code using the `add-watch` function every time
+;; you define a new var. Instead you could use a macro to handle this boilerplate for you.
+(defmacro def-watched [name & value]
+  `(do
+     (def ~name ~@value)
+     (add-watch (var ~name)
+                :re-bind
+                (fn [~'key ~'r old# new#]
+                  (println old# " -> " new#)))))
+
+(def-watched x (* 12 12))
+
+;; Now the watch function will be called and print our string when the value of x is rebound
+(def x 0)
