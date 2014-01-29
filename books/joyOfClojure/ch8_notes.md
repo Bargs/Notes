@@ -54,3 +54,7 @@ See example in `ch8_exercises.clj`
 ### Defining control structures with syntax-quote and unquoting
 
 syntax-quote is useful when you want to selectively evaluate parts of a quoted expression. See `ch8_exercises.clj`.
+
+
+Macros Combining Forms
+--------------------------------------------
