@@ -65,3 +65,7 @@ An interesting quote:
 > In Lisp the distinction between DSL and API is thin to the point of transparency.
 
 Using macros to combine forms can reduce the amount of boilerplate a client must endure when working with your API. See `ch8_exercises.clj` to see an example.
+
+
+Using Macros to Change Forms
+--------------------------------------------

@@ -121,3 +121,55 @@
 
 ;; Now the watch function will be called and print our string when the value of x is rebound
 (def x 0)
+
+
+;; 8.4 Using Macros to Change Forms
+
+;; Sometimes the best way to approach a problem is to write
+;; example code assuming you have all the functions and macros you need
+;; and then implement the ones that don't exist yet.
+
+;; We'll write some code to describe the "simple domain of the ongoing
+;; struggle between humans and monsters."
+
+;; Here we'll describe the things and logical groupings of our domain
+;;
+;; Man versus monster
+;;   People
+;;     Men (humans)
+;;       Name
+;;       Have beards?
+;;   Monsters
+;;     Chupacabra
+;;       Eats goats?
+
+
+;; The above outline could be expressed as a Clojure form if we assume the
+;; existence of some macros and functions that we'll create.
+;;
+;; (domain man-vs-monster
+;;         (grouping people
+;;                   (Human "A stock human")
+;;
+;;                   (Man (isa Human)
+;;                        "A man, baby"
+;;                        [name]
+;;                        [has-beard?]))
+;;         (grouping monsters
+;;                   (Chupacabra
+;;                    "A fierce, yet elusive creature"
+;;                    [eats-goats?])))
+
+;; Our goal in this section will be to create macros that will transform this simple
+;; representation into one that is more programmatically useful.
+
+;; We could represent the above structure as a tree of generic nodes:
+
+{:tag <node form>,  ;; Domain, grouping, etc
+ :attrs {},  ;; e.g. :name people
+ :content [<nodes>]} ;; e.g. properties
+
+;; While this format doesn't fit nicely into our problem domain, it does offer advantages
+;; in that it's a tree, it's composed of simple types, and it's recognizable to some
+;; existing libraries. Using macros, we'll be able to transform our "DSL" into this
+;; more program friendly form.
