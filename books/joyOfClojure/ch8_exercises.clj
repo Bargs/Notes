@@ -173,3 +173,10 @@
 ;; in that it's a tree, it's composed of simple types, and it's recognizable to some
 ;; existing libraries. Using macros, we'll be able to transform our "DSL" into this
 ;; more program friendly form.
+
+(defmacro domain [name & body]
+  `{:tag :domain,
+    :attrs {:name (str '~name)},
+    :content [~@body]})
+
+
