@@ -165,9 +165,9 @@
 
 ;; We could represent the above structure as a tree of generic nodes:
 
-{:tag <node form>,  ;; Domain, grouping, etc
- :attrs {},  ;; e.g. :name people
- :content [<nodes>]} ;; e.g. properties
+;; {:tag <node form>,  ;; Domain, grouping, etc
+;;  :attrs {},  ;; e.g. :name people
+;;  :content [<nodes>]} ;; e.g. properties
 
 ;; While this format doesn't fit nicely into our problem domain, it does offer advantages
 ;; in that it's a tree, it's composed of simple types, and it's recognizable to some
@@ -180,3 +180,96 @@
     :content [~@body]})
 
 
+(declare handle-things)
+
+(defmacro grouping [name & body]
+  `{:tag :grouping,
+    :attrs {:name (str '~name)},
+    :content [~@(handle-things body)]})
+
+;; The following functions for "handling things" may look a bit over
+;; engineered, but they're written so that they can be easily extended
+;; to support potential improvements to the DSL in the future.
+
+(declare grok-attrs grok-props)
+
+;; Takes a list of "things" (children of a grouping). Returns a
+;; lazy seq of nodes based on those things. A "thing" is composed
+;; of a name, an optional comment string and an optional "isa", followed
+;; by some properties (each property inside a vector). The first three
+;; pieces of info are added as a part of the :attrs key in the node and the
+;; properties are added for the :content key. handle-things defers to two
+;; other helper functions (grok-attrs and grok-props) to get the job done.
+(defn handle-things [things]
+  (for [t things]
+    {:tag :thing,
+     :attrs (grok-attrs (take-while (comp not vector?) t))
+     :content (if-let [c (grok-props (drop-while (comp not vector?) t))]
+                [c]
+                [])}))
+
+;; Takes a collection of attrs. Returns a map with keys :name, :isa,
+;; and :comment with values taken from the attrs collection, based
+;; on the format of our DSL.
+(defn grok-attrs [attrs]
+  (into {:name (str (first attrs))}
+        (for [a (rest attrs)]
+          (cond
+           (list? a) [:isa (str (second a))]
+           (string? a) [:comment a]))))
+
+;; Takes a collection of props. When props isn't nil, returns a top level
+;; properties node where :tag = :properties, :attrs = nil, and :content =
+;; a vector of nodes that represent the props passed as an argument to
+;; the function. These prop nodes have :tag = :property, :attrs = the prop's
+;; value with a :name key, and :content = nil.
+(defn grok-props [props]
+  (when props
+    {:tag :properties, :attrs nil,
+     :content (apply vector (for [p props]
+                              {:tag :property,
+                               :attrs {:name (str (first p))},
+                               :content nil}))}))
+
+
+;; A look at the tree structure that our DSL is transformed into.
+(walk/macroexpand-all '(domain man-vs-monster
+                          (grouping people
+                                    (Human "A stock human")
+
+                                    (Man (isa Human)
+                                         "A man, baby"
+                                         [name]
+                                         [has-beard?]))
+                          (grouping monsters
+                                    (Chupacabra
+                                     "A fierce, yet elusive creature"
+                                     [eats-goats?]))))
+
+;; Bind the value returned by an actual application of the macro to a variable.
+(def d
+  (domain man-vs-monster
+          (grouping people
+                    (Human "A stock human")
+
+                    (Man (isa Human)
+                         "A man, baby"
+                         [name]
+                         [has-beard?]))
+          (grouping monsters
+                    (Chupacabra
+                     "A fierce, yet elusive creature"
+                     [eats-goats?]))))
+
+d
+
+;; Thanks to our macros, the DSL is now a programmer friendly tree.
+(:tag d)
+
+(:tag (first (:content d)))
+
+;; Because we used macros to transform our DSL into a more common form,
+;; we can take advantage of libraries that recognize this more genric form.
+(use '[clojure.xml :as xml])
+
+(xml/emit d)

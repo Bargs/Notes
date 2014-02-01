@@ -69,3 +69,5 @@ Using macros to combine forms can reduce the amount of boilerplate a client must
 
 Using Macros to Change Forms
 --------------------------------------------
+
+Macros take data and return data. One task macros can accomplish is to take data, transform it somehow, and return the results. In Clojure, code is data and data is code. So, macros can take code in one form and return the code in another form. This can be useful for a number of things. For one, it can be helpful to mold a programming language to your specific problem domain. Usually this means creating some sort of DSL. While a DSL makes programming in your domain easier, it makes it harder to leverage third party libraries that know nothing about your DSL. It would be nice to write our code using a DSL, but have it transformed into a more common format behind the scenes. Macros can do this for us. See section 8.4 of `ch8_exercises.clj` for an in depth example.
