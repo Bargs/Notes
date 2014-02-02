@@ -273,3 +273,33 @@ d
 (use '[clojure.xml :as xml])
 
 (xml/emit d)
+
+
+
+;; 8.5 Using macros to control symbolic resolution time
+
+;; A simple macro
+(defmacro resolution [] `x)
+
+;; Notice that at macro-expansion time Clojure will resolve
+;; the namespace of the syntax-quoted symbol. This avoids problems
+;; with name capturing
+(macroexpand '(resolution))
+
+;; Because the syntax-quote resolved the namespace of x at
+;; macro-expansion time, the symbol resolves to the value 9
+;; instead of the local value 109
+(def x 9)
+(let [x 109] (resolution))
+
+;; An example of a macro that uses an anaphora
+(defmacro awhen [expr & body]
+  `(let [~'it ~expr]
+     (if ~'it
+       (do ~@body))))
+
+(awhen [1 2 3] (it 2))
+
+(awhen nil (println "Will never get here"))
+
+(awhen 1 (awhen 2 [it]))
