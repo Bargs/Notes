@@ -292,11 +292,21 @@ d
 (def x 9)
 (let [x 109] (resolution))
 
-;; An example of a macro that uses an anaphora
+;; An example of a macro that uses an anaphora, with help
+;; from selective name capturing.
+
+;; Try removing the quote and unquote from `it` in turn. Note that
+;; removing unquote causes the literal form (quote x) to be placed
+;; in the position for the binding form in `let` and blows up
+;; when you try to actually use `awhen`. Note that removing the quote
+;; causes the unquote to attempt to resolve `it` at compile time and
+;; throws a `CompilerException`.
 (defmacro awhen [expr & body]
   `(let [~'it ~expr]
      (if ~'it
        (do ~@body))))
+
+(macroexpand '(awhen [1 2 3] (it 2)))
 
 (awhen [1 2 3] (it 2))
 

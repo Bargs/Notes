@@ -78,3 +78,5 @@ Using Macros to Control Symbolic Resolution Time
 
 In Clojure, the use of syntax-quote will attempt to resolve symbols at macro-expansion time. This helps avoid *name capture* issues where a name generated at compile time clashes with a name available at run-time.
 
+Howerver, it is possible to defer symbolic resolution. You can selectively capture a symbolic name in a macro body by unquoting the quoted symbol inside a syntax-quote (e.g. `\`(+ 2 ~'x)`  the x here will not be qualified with a namespace). The unquote is necessary because the syntax-quote would otherwise try to resolve the namespace of x. The quote is necessary because the unquote would try to resolve the value of x at compile time without it, resulting in a `CompilerException`. An example of this is shown in `ch8_exercises.clj` by implementing a macro that uses an anaphora (in spoken language, a term used in a sentence that refers back to a previously identified subject or object). Note that anaphoras aren't often used in Clojure since they don't nest.
+
