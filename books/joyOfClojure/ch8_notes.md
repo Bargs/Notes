@@ -80,3 +80,6 @@ In Clojure, the use of syntax-quote will attempt to resolve symbols at macro-exp
 
 Howerver, it is possible to defer symbolic resolution. You can selectively capture a symbolic name in a macro body by unquoting the quoted symbol inside a syntax-quote (e.g. `\`(+ 2 ~'x)`  the x here will not be qualified with a namespace). The unquote is necessary because the syntax-quote would otherwise try to resolve the namespace of x. The quote is necessary because the unquote would try to resolve the value of x at compile time without it, resulting in a `CompilerException`. An example of this is shown in `ch8_exercises.clj` by implementing a macro that uses an anaphora (in spoken language, a term used in a sentence that refers back to a previously identified subject or object). Note that anaphoras aren't often used in Clojure since they don't nest.
 
+Selective name capturing can be useful when you're using another macro or function that provides an anaphoric symbol. In order to use that symbol in your own macro, you may have to selectively unquote it using the `~'a-symbol` pattern.
+
+A macro that doesn't cause name capturing is considered *hygienic*. Clojure prefers hygienic macros, so if you want to name capture you must do so explicitly using the `~'a-symbol` pattern.
