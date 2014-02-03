@@ -313,3 +313,36 @@ d
 (awhen nil (println "Will never get here"))
 
 (awhen 1 (awhen 2 [it]))
+
+
+;; 8.6 Using Macros to Manage Resources
+
+(import [java.io BufferedReader InputStreamReader]
+        [java.net URL])
+
+(defn joc-www []
+  (-> "http://joyofclojure.com/hello" URL.
+      .openStream
+      InputStreamReader.
+      BufferedReader.))
+
+;; Our generic `with-open` esque macro
+;; Note that it avoids the nesting problems that most anaphoric macros
+;; have by requiring the user to explicitly pass in the anaphora symbol
+;; to be used in `close-fn`. This is done by passing a vector as the
+;; `binding` argument.
+(defmacro with-resource [binding close-fn & body]
+  `(let ~binding
+     (try
+       (do ~@body)
+       (finally
+        (~close-fn ~(binding 0))))))
+
+(let [stream (joc-www)]
+  (with-resource [page stream]
+    #(.close %)
+    (.readLine page)))
+
+(macroexpand '(with-resource [page stream]
+    #(.close %)
+    (.readLine page)))

@@ -83,3 +83,10 @@ Howerver, it is possible to defer symbolic resolution. You can selectively captu
 Selective name capturing can be useful when you're using another macro or function that provides an anaphoric symbol. In order to use that symbol in your own macro, you may have to selectively unquote it using the `~'a-symbol` pattern.
 
 A macro that doesn't cause name capturing is considered *hygienic*. Clojure prefers hygienic macros, so if you want to name capture you must do so explicitly using the `~'a-symbol` pattern.
+
+
+Using Macros to Manage Resources
+------------------------------------------------
+
+Macros can be used to automatically handle scarce resources in situations where Java programmers would typically have to rely on the try/catch/finally idiom. For instance, Clojure provides a `with-open` macro that will, when given a "closeable" object, automatically call that object's `.close` method in a finally block. If a resource you're working with doesn't have a `.close` method, you can easily create a generic version of this macro (as seen in `ch8_exercises.clj`).
+
