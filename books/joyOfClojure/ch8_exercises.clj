@@ -346,3 +346,30 @@ d
 (macroexpand '(with-resource [page stream]
     #(.close %)
     (.readLine page)))
+
+
+;; 8.7 Macros returning functions
+
+;; We're going to implement a macro that provides a DSL
+;; for writing pre and post conditions for functions
+
+;; An example call of our macro
+;;
+;; (contract doubler
+;;           [x]
+;;           (:require (pos? x))
+;;           (:ensure
+;;            (= (* 2 x) %)))
+
+(declare collect-bodies)
+
+(defmacro contract [name & forms]
+  (list* `fn name (collect-bodies forms)))
+
+(declare build-contract)
+
+(defn collect-bodies [forms]
+  (for [form (partition 3 forms)]
+    (build-contract form)))
+
+
