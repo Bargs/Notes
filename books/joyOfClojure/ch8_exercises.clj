@@ -363,6 +363,12 @@ d
 
 (declare collect-bodies)
 
+
+;; NOTE: I don't know why they decided to add the name argument here.
+;;       Apparently you can name anonymous functions, but I don't remember
+;;       them ever going over this previously. I tried removing the name
+;;       arg and everything still worked fine, I guess they just added
+;;       it to confuse people.
 (defmacro contract [name & forms]
   (list* `fn name (collect-bodies forms)))
 
@@ -372,4 +378,65 @@ d
   (for [form (partition 3 forms)]
     (build-contract form)))
 
+(defn build-contract [c]
+  (let [args (first c)]
+    (list (into '[f] args)
+          (apply merge
+                 (for [con (rest c)]
+                   (cond (= (first con) 'require)
+                           (assoc {} :pre (vec (rest con)))
+                         (= (first con) 'ensure)
+                           (assoc {} :post (vec (rest con)))
+                         :else (throw (Exception.
+                                       (str "Unknown tag "
+                                            (first con)))))))
+          (list* 'f args))))
 
+(def doubler-contract
+  (contract doubler
+            [x]
+            (require
+             (pos? x))
+            (ensure
+             (= (* 2 x) %))))
+
+(macroexpand-1 '(contract doubler
+            [x]
+            (require
+             (pos? x))
+            (ensure
+             (= (* 2 x) %))))
+
+(def times2 (partial doubler-contract #(* 2 %)))
+
+(times2 9)
+
+(def times3 (partial doubler-contract #(* 3 %)))
+
+(times3 9)
+
+
+(def doubler-contract
+  (contract doubler
+            [x]
+            (require
+             (pos? x))
+            (ensure
+             (= (* 2 x) %))
+            [x y]
+            (require
+             (pos? x)
+             (pos? y))
+            (ensure
+             (= (* 2 (+ x y)) %))))
+
+
+((partial doubler-contract #(* 2 %)) 9)
+
+((partial doubler-contract #(* 3 %)) 9)
+
+((partial doubler-contract #(* 2 (+ %1 %2))) 2 3)
+
+((partial doubler-contract #(+ %1 %1 %2 %2)) 2 3)
+
+((partial doubler-contract #(* 3 (+ %1 %2))) 2 3)
