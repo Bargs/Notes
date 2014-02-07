@@ -40,6 +40,7 @@ Gives the programmer the most control over the namespace they're creating. Doesn
 Members of a namespace can be made private by attaching metadata to their var. That would look something like this:
 
 > (ns hider.ns)
-(defn ^{:private true} answer [] 42)
+
+> (defn ^{:private true} answer [] 42)
 
 For functions, the same can be accomplished with the shorthand macro `defn-`. For `def` and `defmacro`, however, the private metadata must be added manually.
