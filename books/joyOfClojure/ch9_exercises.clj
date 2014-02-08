@@ -56,3 +56,38 @@ bonobo/x
 (remove-ns 'bonobo)
 
 (all-ns)
+
+
+;; Multimethods and the universal design pattern (udp)
+
+;;We're going to need a get function, so exclude clojure.core's
+(ns joy.udp
+  (:refer-clojure :exclude [get]))
+
+;; The udp is built on five funtions: beget, get, put, has?, and forget.
+;; For our subset we'll just need the first three.
+
+;; Takes a map and associates its prototype reference to
+;; another map. Ensures the map has a properly formatted
+;; prototype entry as specified by the UDP.
+(defn beget [this proto]
+  (assoc this ::prototype proto))
+
+;; Note, double colons just fully qualify a keyword with your
+;; current namespace. So ::prototype is :joy.udp/prototype
+
+
+;; get will search through a map and its prototypes for a key.
+;; Returns nil if the key is not found.
+(defn get [m k]
+  (when m
+    (if-let [[_ v] (find m k)]
+      v
+      (recur (::prototype m) k))))
+
+(get (beget {:sub 0} {:super 1})
+     :super)
+
+;; put adds a key and value to a map, overwriting a matching one
+;; if it exists. Works the same as clojure's assoc, so this is easy.
+(def put assoc)
