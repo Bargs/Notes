@@ -91,3 +91,36 @@ bonobo/x
 ;; put adds a key and value to a map, overwriting a matching one
 ;; if it exists. Works the same as clojure's assoc, so this is easy.
 (def put assoc)
+
+
+;; A simple example usage of our new methods
+(def cat {:likes-dogs true, :ocd-bathing true})
+(def morris (beget {:likes-9lives true} cat))
+(def post-traumatic-morris (beget {:likes-dogs nil} morris))
+
+(get cat :likes-dogs)
+
+(get morris :likes-dogs)
+
+(get post-traumatic-morris :likes-dogs)
+
+
+;; A multimethod. Will dispatch the call to the function based
+;; on the value of the :os key in the map argument passed in
+(defmulti compiler :os)
+(defmethod compiler ::unix [m] (get m :c-compiler))
+(defmethod compiler ::osx [m] (get m :llvm-compiler))
+
+
+;; Usage of our multimethod
+(def clone (partial beget {}))
+(def unix {:os ::unix, :c-compiler "cc", :home "/home", :dev "/dev"})
+(def osx (->
+          (clone unix)
+          (put :os ::osx)
+          (put :llvm-compiler "clang")
+          (put :home "/Users")))
+
+(compiler unix)
+
+(compiler osx)

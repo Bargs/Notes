@@ -73,3 +73,9 @@ A namespace definition might look like this:
 `refer-clojure` is the same as `(refer 'clojure.core)`. It can be used in conjunction with the `exclude` filter to remove bindings to vars in clojure.core in your namespace to avoid conflicts if your lib needs to use those names.
 
 `load` will load clojure code on the classpath, given a directory path.
+
+
+Multimethods and the UDP
+--------------------------------------------
+
+Multimethods provide function polymorphism based on the result of an arbitrary dispatch function.
