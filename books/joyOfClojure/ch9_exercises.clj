@@ -124,3 +124,28 @@ bonobo/x
 (compiler unix)
 
 (compiler osx)
+
+
+;; A new multimethod with which we'll demonstrate ad hoc inheritance.
+(defmulti home :os)
+(defmethod home ::unix [m] (get m :home))
+
+(home unix)
+
+;; As is, this will thrown an error because the multimethod doesn't
+;; support ::osx
+(home osx)
+
+;; We'll tell Clojure that "::osx is a ::unix".
+(derive ::osx ::unix)
+
+;; And now our multimethod supports ::osx using the function for ::unix
+(home osx)
+
+;; We can see the derivation hierarchy using the `parents`, `ancestors`,
+;; `descendants` and `isa?` functions.
+(parents ::osx)
+(ancestors ::osx)
+(descendants ::unix)
+(isa? ::osx ::unix)
+(isa? ::unix ::osx)
