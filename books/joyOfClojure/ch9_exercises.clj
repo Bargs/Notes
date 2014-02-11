@@ -149,3 +149,41 @@ bonobo/x
 (descendants ::unix)
 (isa? ::osx ::unix)
 (isa? ::unix ::osx)
+
+
+;; If a value has two ancestors and they're both used as dispatch values
+;; for the same multimethod, you can run into conflicts with multiple
+;; inheritance.
+(derive ::osx ::bsd)
+(defmethod home ::bsd [m] "/home")
+
+;; Will thrown an error because the ::unix and ::bsd methods both match
+(home osx)
+
+;; We can fix this by defining a preferred method
+(prefer-method home ::unix ::bsd)
+
+(home osx)
+
+
+;; Clojure maintains derivation relationships in a global structure. If you
+;; want to avoid dealing with global state, you can define your own
+;; derivation hierarchy. Once you have your own hierarchy you can pass it
+;; to defmulti to specify the derivation context it should use instead of the
+;; global one.
+(def isBSD (-> (make-hierarchy)
+               (derive ::osx ::bsd)))
+
+(def isUnix (-> (make-hierarchy)
+               (derive ::osx ::unix)))
+
+(defmulti bsdHome :os :hierarchy #'isBSD)
+(defmethod bsdHome ::unix [m] (get m :home))
+(defmethod bsdHome ::bsd [m] "/home")
+
+(defmulti unixHome :os :hierarchy #'isUnix)
+(defmethod unixHome ::unix [m] (get m :home))
+(defmethod unixHome ::bsd [m] "/home")
+
+(bsdHome osx)
+(unixHome osx)
