@@ -187,3 +187,16 @@ bonobo/x
 
 (bsdHome osx)
 (unixHome osx)
+
+;; Multimethods can use arbitrary dispatch functions, not just keywords
+(defmulti compile-cmd (juxt :os compiler))
+
+(defmethod compile-cmd [::osx "clang"] [m]
+  (str "/usr/bin/" (get m :llvm-compiler)))
+
+(defmethod compile-cmd :default [m]
+  (str "Unsure where to locate " (get m :c-compiler)))
+
+(compile-cmd osx)
+
+(compile-cmd unix)

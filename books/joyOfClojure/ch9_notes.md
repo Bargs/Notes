@@ -78,4 +78,8 @@ A namespace definition might look like this:
 Multimethods and the UDP
 --------------------------------------------
 
-Multimethods provide function polymorphism based on the result of an arbitrary dispatch function.
+Multimethods provide function polymorphism based on the result of an arbitrary dispatch function. Most of the details and examples are in the exercises file for this chapter. Multimethods and ad hoc hierarchies are extremely flexible tools but they can make things complex. Clojure provides higher level, more simple tools for creating abstractions and polymorphism which will be in the next section.
+
+
+Types, Protocols, and Records
+--------------------------------------------
