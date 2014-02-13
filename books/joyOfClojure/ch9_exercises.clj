@@ -228,3 +228,18 @@ bonobo/x
 
 (def sample-tree (reduce xconj nil [3 5 2 4 6]))
 (xseq sample-tree)
+
+
+;; Protocols
+
+;; Our protocol for First In X Out (objects like stacks and queues)
+(defprotocol FIXO
+  (fixo-push [fixo value])
+  (fixo-pop [fixo])
+  (fixo-peek [fixo]))
+
+
+(extend-type TreeNode
+  FIXO
+  (fixo-push [node value]
+             (xconj node value)))
