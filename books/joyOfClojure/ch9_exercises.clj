@@ -200,3 +200,31 @@ bonobo/x
 (compile-cmd osx)
 
 (compile-cmd unix)
+
+
+;; Types, Protocols, and Records
+
+;; Records
+
+;; Building a persistent binary tree from records instead of maps
+
+(defrecord TreeNode [val l r])
+
+(TreeNode. 5 nil nil)
+
+;; Our tree builder is changed only slightly to use the record's constructor
+;; instead of creating regular maps
+(defn xconj [t v]
+  (cond
+   (nil? t) (TreeNode. v nil nil)
+   (< v (:val t)) (TreeNode. (:val t) (xconj (:l t) v) (:r t))
+   :else (TreeNode. (:val t) (:l t) (xconj (:r t) v))))
+
+;; Notice that the implementation of xseq has not changed at all since keywords
+;; can look themselves up in records just as they do with maps
+(defn xseq [t]
+  (when t
+    (concat (xseq (:l t)) [(:val t)] (xseq (:r t)))))
+
+(def sample-tree (reduce xconj nil [3 5 2 4 6]))
+(xseq sample-tree)

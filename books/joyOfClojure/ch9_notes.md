@@ -83,3 +83,26 @@ Multimethods provide function polymorphism based on the result of an arbitrary d
 
 Types, Protocols, and Records
 --------------------------------------------
+
+### Records
+
+Records are like slightly less flexible maps with much better performance. Records are defined using the `defrecord` form which looks something like this:
+
+```
+(defrecord TreeNode [val l r])
+
+(TreeNode. 5 nil nil)
+```
+
+`defrecord` creates a new Java class with a constructor with parameters for each of the fields listed. This class is auto imported into the namespace where the record is declared, but it must done manually in other namespaces using the `:import` directive to the `ns` function.
+
+Why should you use records?
+
+1. They're a simple way of defining what fields your object should have instead of using a structure-less map.
+2. They're created more quickly, consume less memory, and look up keys faster than regular maps.
+3. They can store primitive values isntead of boxed primitives which take up more memory.
+
+**Note**
+> Records don't serve as functions like maps do. Also, records are never equal to maps with the same key/avlue mappings. Also note that records are similar to structs that you might see in older code, and have largely replaced them.
+
+See an example of the persistent binary tree from previous chapters built from records instead of maps in `ch9_exercises.clj`.
