@@ -106,3 +106,8 @@ Why should you use records?
 > Records don't serve as functions like maps do. Also, records are never equal to maps with the same key/avlue mappings. Also note that records are similar to structs that you might see in older code, and have largely replaced them.
 
 See an example of the persistent binary tree from previous chapters built from records instead of maps in `ch9_exercises.clj`.
+
+
+### Protocols
+
+A *protocol* is a set of function signatures (each with at least one parameter), not unlike an interface in Java. When one of the functions is called, the correct implementation is found based on the type of the first parameter. This is like type based polymorphism in Java if you think of the first parameter as the target object that would be left of the dot in Java.
