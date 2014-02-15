@@ -239,7 +239,31 @@ bonobo/x
   (fixo-peek [fixo]))
 
 
+;; extend-type takes a class or interface to be extended and then
+;; one or more blocks that start with the name of a protocol to be extended.
+;; Each block contains one or more functions from that protocol to implement
+;; Here we're extending TreeNode to implement the fixo-push function from the
+;; FIXO protocol.
 (extend-type TreeNode
   FIXO
   (fixo-push [node value]
              (xconj node value)))
+
+(xseq (fixo-push sample-tree 5/2))
+
+
+;; Protocols are useful because they allow for polymorphism. We already
+;; implemented fixo-push for TreeNode, but we could also implement it with
+;; vectors.
+(extend-type clojure.lang.IPersistentVector
+  FIXO
+  (fixo-push [vector value]
+             (conj vector value)))
+
+(fixo-push [2 3 4 5 6] 5/2)
+
+;; Note that IPersistentVector is an interface, not a concrete class like
+;; TreeNode. This means that fixo-push can be used with any class
+;; that implements IPersistentVector. Also, fixo-push is now polymorphic,
+;; choosing the correct implmenetation depending on whether the first
+;; parameter (the "target object" in OOP terms) is a vector or a TreeNode.

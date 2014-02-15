@@ -112,4 +112,4 @@ See an example of the persistent binary tree from previous chapters built from r
 
 A *protocol* is a set of function signatures (each with at least one parameter), not unlike an interface in Java. When one of the functions is called, the correct implementation is found based on the type of the first parameter. This is like type based polymorphism in Java if you think of the first parameter as the target object that would be left of the dot in Java.
 
-Protocols are implemented using the `extend`, `extend-type`, and `extend-protocol` forms.
+Protocols are implemented using the `extend`, `extend-type`, and `extend-protocol` forms. All of these do the same thing, `extend-type` and `extend-protocol` are just convenience macros for specific scenarios.
