@@ -267,3 +267,48 @@ bonobo/x
 ;; that implements IPersistentVector. Also, fixo-push is now polymorphic,
 ;; choosing the correct implmenetation depending on whether the first
 ;; parameter (the "target object" in OOP terms) is a vector or a TreeNode.
+
+
+;; You can even extend a protocol to nil
+
+;; We get an error trying to use fixo-push on nil right now
+(reduce fixo-push nil [3 5 2 4 6 0])
+
+;; But if we extend the protocol to nil, we can have it use the TreeNode implementation
+(extend-type nil
+  FIXO
+  (fixo-push [t v]
+             (TreeNode. v nil nil)))
+
+(xseq (reduce fixo-push nil [3 5 2 4 6 0]))
+
+
+;; Here's a complete implementation of FIXO for TreeNodes and vectors
+
+;; TreeNode's FIXO is a little strange, "first in" doesn't really mean anything.
+;; peek and pop just work on the smallest value in the tree.
+(extend-type TreeNode
+  FIXO
+  (fixo-push [node value]
+             (xconj node value))
+  (fixo-peek [node]
+             (if (:l node)
+               (recur (:l node))
+               (:val node)))
+  (fixo-pop [node]
+            (if (:l node)
+              (TreeNode. (:val node) (fixo-pop (:l node)) (:r node))
+              (:r node))))
+
+;; Vector's FIXO works like a stack, FILO
+(extend-type clojure.lang.IPersistentVector
+  FIXO
+  (fixo-push [vector value]
+             (conj vector value))
+  (fixo-peek [vector]
+             (peek vector))
+  (fixo-pop [vector]
+            (pop vector)))
+
+(fixo-peek (fixo-pop (reduce fixo-push nil [3 5 2 4 6])))
+(fixo-peek (fixo-pop (reduce fixo-push [] [3 5 2 4 6])))

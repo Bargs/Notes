@@ -116,3 +116,5 @@ Protocols are implemented using the `extend`, `extend-type`, and `extend-protoco
 
 **Note**
 > Protocol extension is at the granularity of the entire protocol and not on a per-function basis. In order to extend all of a protocol's functions for a given type, they must all be extended in the same `extend-type` form.
+
+Clojure polymorphism lives in the protocol functions, not in the classes. This is unlike most OO languages, where you would have to use wrappers, adapters, or monkey patching to dynamically extend functionality to a type the way a Clojure protocol can. This makes it easier to tie together third party libraries that know nothing about each other.
