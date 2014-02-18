@@ -118,3 +118,24 @@ Protocols are implemented using the `extend`, `extend-type`, and `extend-protoco
 > Protocol extension is at the granularity of the entire protocol and not on a per-function basis. In order to extend all of a protocol's functions for a given type, they must all be extended in the same `extend-type` form.
 
 Clojure polymorphism lives in the protocol functions, not in the classes. This is unlike most OO languages, where you would have to use wrappers, adapters, or monkey patching to dynamically extend functionality to a type the way a Clojure protocol can. This makes it easier to tie together third party libraries that know nothing about each other.
+
+
+#### Sharing Method Implementations
+
+Protocols and `extend` don't support inheritance of implementation. You can't build a base implementation of a protocol, and then build on top of it for a given type the way you might with an abstract base class and concrete class in Java. Instead, there are a couple other ways to achieve code reuse, keeping things DRY.
+
+1. Write a regular function that builds on the protocol's methods. Instead of making the function part of the protocol itself, simply build it using only protocol methods when manipulating the arguments. This way the function will work with any type that the protocol's methods have been extended to.
+
+Ex.
+```
+(defn fixo-into [c1 c2]
+(reduce fixo-push c1 c2))
+
+(xseq (fixo-into (TreeNode. 5 nil nil) [2 4 6 7]))
+;=> (2 4 5 6 7)
+
+(seq (fixo-into [5] [2 4 6 7]))
+;=> (5 2 4 6 7)
+```
+
+2. Use `extend` instead of `extend-type` and `extend-protocol`.  `extend` takes a map of protocol implementations keyed by the functions' names. This map can be defined separately from the `extend` form. Once you've defined the map for one type, it can be used (in whole or in parts) by other types that wish to share the implementation.
