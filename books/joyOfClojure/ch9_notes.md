@@ -139,3 +139,8 @@ Ex.
 ```
 
 2. Use `extend` instead of `extend-type` and `extend-protocol`.  `extend` takes a map of protocol implementations keyed by the functions' names. This map can be defined separately from the `extend` form. Once you've defined the map for one type, it can be used (in whole or in parts) by other types that wish to share the implementation.
+
+
+#### Reify
+
+Reify can combine the power of closures and protocols. Need to investigate this more as the detail in the book is a bit light...

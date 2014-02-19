@@ -312,3 +312,18 @@ bonobo/x
 
 (fixo-peek (fixo-pop (reduce fixo-push nil [3 5 2 4 6])))
 (fixo-peek (fixo-pop (reduce fixo-push [] [3 5 2 4 6])))
+
+
+;; reify combines the power of protocols and closures
+(defn fixed-fixo
+  ([limit] (fixed-fixo limit []))
+  ([limit vector]
+   (reify FIXO
+     (fixo-push [this value]
+                (if (< (count vector) limit)
+                  (fixed-fixo limit (conj vector value))
+                  this))
+     (fixo-peek [_]
+                (peek vector))
+     (fixo-pop [_]
+               (pop vector)))))
