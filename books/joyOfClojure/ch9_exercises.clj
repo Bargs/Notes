@@ -327,3 +327,12 @@ bonobo/x
                 (peek vector))
      (fixo-pop [_]
                (pop vector)))))
+
+;; With a limit of three, fixo-peek returns the third item we push onto the stack
+(fixo-peek (reduce fixo-push (fixed-fixo 3) [1 2 3]))
+
+;; If we try to push a fourth item, it doesn't get added
+(fixo-peek (reduce fixo-push (fixed-fixo 3) [1 2 3 4]))
+
+;; An extra item can only be added if another is popped first
+(fixo-peek (fixo-push (fixo-pop (reduce fixo-push (fixed-fixo 3) [1 2 3])) 4))

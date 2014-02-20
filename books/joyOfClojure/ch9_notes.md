@@ -143,4 +143,7 @@ Ex.
 
 #### Reify
 
-Reify can combine the power of closures and protocols. Need to investigate this more as the detail in the book is a bit light...
+Reify can combine the power of closures and protocols. It's a lot like an anonymous class in Java. The result of a `reify` expression is an object that implements a protocol/interface without having a concrete class definition laying around elsewhere. When this new object is passed as the first parameter to one of the methods of the protocol, the matching method implementation that was passed to `reify` will be called.
+
+Part of what makes `reify` interesting is that the implementation methods can be closures. Like the "bot" example from chapter 7, these closures can share an environment so that they feel like methods on a traditional object, using shared state. Unlike the bot example, the closures we're using with `reify` provide an implementation for a protocol, giving clients of the object a stable abstraction to code against. See an example in `ch9_exercises.clj`.
+
