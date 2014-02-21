@@ -147,3 +147,6 @@ Reify can combine the power of closures and protocols. It's a lot like an anonym
 
 Part of what makes `reify` interesting is that the implementation methods can be closures. Like the "bot" example from chapter 7, these closures can share an environment so that they feel like methods on a traditional object, using shared state. Unlike the bot example, the closures we're using with `reify` provide an implementation for a protocol, giving clients of the object a stable abstraction to code against. See an example in `ch9_exercises.clj`.
 
+#### Namespaces and protocol methods
+
+Protocol methods live in the same namespace as the protocol itself. Regardless of the type/record that a protocol has been extended to, the methods are always in the same namespace. This means that you could extend multiple protocols from different namespaces to a single type without coflict, even if all of their method names are exactly the same. This makes it easier to manage third party code outside of your control. It also means that two protocols in the same namespace can't have methods with the same names, but that is less of a problem since the same person usually has control over all of the code in a single namespace.
