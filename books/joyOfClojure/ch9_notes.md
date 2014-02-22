@@ -150,3 +150,13 @@ Part of what makes `reify` interesting is that the implementation methods can be
 #### Namespaces and protocol methods
 
 Protocol methods live in the same namespace as the protocol itself. Regardless of the type/record that a protocol has been extended to, the methods are always in the same namespace. This means that you could extend multiple protocols from different namespaces to a single type without coflict, even if all of their method names are exactly the same. This makes it easier to manage third party code outside of your control. It also means that two protocols in the same namespace can't have methods with the same names, but that is less of a problem since the same person usually has control over all of the code in a single namespace.
+
+#### Implementing protocol methods in defrecord
+
+Instead of using `extend` you can also implement a protocol or interface directly in `defrecord`. This can be more convenient, and calling methods implemented this way can also be several times faster than their `extend` bretheren. The record keys can also be used directly as local variables in these method implementations. See an example in `ch9_exercises.clj`.
+
+A couple of notes:
+
+1. This style of implementation allows you to implement Java interfaces and extend java.lang.Object, which the `extend` forms do not.
+
+2. When using `recur`, there's no need to pass the target object, it will be passed automatically (just like with `reify`).

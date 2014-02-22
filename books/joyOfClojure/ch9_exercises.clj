@@ -336,3 +336,26 @@ bonobo/x
 
 ;; An extra item can only be added if another is popped first
 (fixo-peek (fixo-push (fixo-pop (reduce fixo-push (fixed-fixo 3) [1 2 3])) 4))
+
+
+;; Implementing protocol methods directly in the defrecord form
+
+(defrecord TreeNode [val l r]
+  FIXO
+  (fixo-push [t v]
+             (if (< v val)
+               (TreeNode. val (fixo-push l v) r)
+               (TreeNode. val l (fixo-push r v))))
+  (fixo-peek [t]
+             (if l
+               (fixo-peek l)
+               val))
+  (fixo-pop [t]
+            (if l
+              (TreeNode. val (fixo-pop l) r)
+              r)))
+
+
+(def sample-tree2 (reduce fixo-push (TreeNode. 3 nil nil) [5 2 4 6]))
+
+(xseq sample-tree2)
