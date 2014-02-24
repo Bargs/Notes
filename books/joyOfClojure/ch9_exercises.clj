@@ -359,3 +359,39 @@ bonobo/x
 (def sample-tree2 (reduce fixo-push (TreeNode. 3 nil nil) [5 2 4 6]))
 
 (xseq sample-tree2)
+
+
+;; Defining our FIXO TreeNode with deftype so that we can override
+;; the methods that Clojure normally implements automatically for records
+
+(deftype TreeNode [val l r]
+  FIXO
+  (fixo-push [_ v]
+             (if (< v val)
+               (TreeNode. val (fixo-push l v) r)
+               (TreeNode. val l (fixo-push r v))))
+  (fixo-peek [_]
+             (if l
+               (fixo-peek l)
+               val))
+  (fixo-pop [_]
+            (if l
+              (TreeNode. val (fixo-pop l) r)
+              r))
+
+  clojure.lang.IPersistentStack
+  (cons [this v] (fixo-push this v))
+  (peek [this] (fixo-peek this))
+  (pop [this] (fixo-pop this))
+
+  clojure.lang.Seqable
+  (seq [t]
+       (concat (seq l) [val] (seq r))))
+
+(extend-type nil
+  FIXO
+  (fixo-push [t v]
+             (TreeNode. v nil nil)))
+
+(def sample-tree2 (into (TreeNode. 3 nil nil) [5 2 4 6]))
+(seq sample-tree2)

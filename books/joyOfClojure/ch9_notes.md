@@ -167,3 +167,6 @@ A couple of notes:
 Because a record is a map, it implements everything that maps do (seq, assoc, dissoc, get, etc). As a result, you can't provide your own implementation of these methods by extending their interfaces/protocols to your records, they've already been implemented.
 
 If you wish to implement these methods yourself, you have to use `deftype`. It's similar to `defrecord` but it doesn't implement any methods at all. This means that you have to implement any and all methods you'd like that Clojure would normally provide for you with `defrecord`.
+
+**Note**
+> `deftype` is the one way Clojure gives you to create classes with volatile and mutable fields. Don't do this unless you know what you're doing.
