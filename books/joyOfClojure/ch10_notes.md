@@ -18,3 +18,23 @@ Three important terms that form the foundation for Clojure's model of state mana
 * Identity - The logical entity identified by a common stream of states occuring over time.
 
 When dealing with identities in Clojure's model, you're receiving a snapshot of its properties at a moment in time, not necessarily the most recent.
+
+Clojure's STM works with transactions demarked by the `dosync` form. A transaction builds a set of changeable data cells that should all change together. Like a database transaction, a Clojure transaction is all or nothing.
+
+Clojure's four reference types are good at different things. The following table describes their features:
+
+
+              Ref  Agent  Atom  Var
+Coordinated    x
+Asynchronous         x
+Retriable      x           x
+Thread-local                     x
+
+
+* Coordinated - Reads and writes to multiple refs can be made in a way that guarantees no race conditions
+* Asynchronous - The request to update is queued to happen in another thread some time later, while the thread that made the request continues immediately
+* Retriable - Indicates that the work done to update a reference's value is speculative and may have to be repeated
+* Thread-local - Thread safety is achieved by isolating changes to state to a single thread
+
+
+The value for each reference type is accessed in the same way, using the `@` reader feature or the `deref` function. The write mechanism for each type is unique. All reference types provide *consistency* by allowing the association of a validator function via `setvalidator`.
