@@ -395,3 +395,40 @@ bonobo/x
 
 (def sample-tree2 (into (TreeNode. 3 nil nil) [5 2 4 6]))
 (seq sample-tree2)
+
+
+;; Creating a chess move builder
+
+;; With Clojure, we don't need a lot of ceremony to create a "fluent" builder
+(defn build-move [& pieces]
+  (apply hash-map pieces))
+
+(build-move :from "e7" :to "e8" :promotion \0)
+
+;; It would be nice if we had a toString method like we can in Java though
+;; We can do that if we use a record instead of a plain map
+(defrecord Move [from to castle? promotion]
+  Object
+  (toString [this]
+            (str "Move " (:from this)
+                 " to " (:to this)
+                 (if (:castle? this) " castle"
+                   (if-let [p (:promotion this)]
+                     (str " promote to " p)
+                     "")))))
+
+(str (Move. "e2" "e4" nil nil))
+
+;; That's nice, but now our builder is more brittle. We have to pass in constructor args in a specific order.
+;; To fix that, let's wrap the constructor with the build-move function
+
+(defn build-move [& {:keys [from to castle? promotion]}]
+  {:pre [from to]}
+  (Move. from to castle? promotion))
+
+(str (build-move :from "e2" :to "e4"))
+
+;; Things to note about this function:
+;; 1. We've separated validation logic from the type itself by adding a pre-condition to build-move.
+;; 2. Using destructuring the arguments can again be passed in any order, avoiding silly construction errors
+;; 3. Records are maps, thus they automatically work with the rich ecosystem of Clojure code that work with maps
