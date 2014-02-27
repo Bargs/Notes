@@ -38,3 +38,5 @@ Thread-local                     x
 
 
 The value for each reference type is accessed in the same way, using the `@` reader feature or the `deref` function. The write mechanism for each type is unique. All reference types provide *consistency* by allowing the association of a validator function via `setvalidator`.
+
+`ch10_exercises.clj` delves into the details of refs with a mutable game board example.
