@@ -1,4 +1,22 @@
 
+;; Defining a utility that will let us throw a bunch of
+;; threads at a given function
+(ns joy.mutation
+  (:import java.util.concurrent.Executors))
+
+(def thread-pool
+  (Executors/newFixedThreadPool
+   (+ 2 (.availableProcessors (Runtime/getRuntime)))))
+
+(defn dothreads!
+  [f & {thread-count :threads
+        exec-count :times
+        :or {thread-count 1 exec-count 1}}]
+  (dotimes
+    [t thread-count]
+    (.submit thread-pool #(dotimes [_ exec-count] (f)))))
+
+
 ;; Creating a mutable game board with refs
 
 (def
@@ -47,3 +65,41 @@
   [[[mover mpos] [_ enemy-pos]]]
   [mover (some #(good-move? % enemy-pos)
                (shuffle (king-moves mpos)))])
+
+
+(defn place [from to] to)
+
+(defn move-piece [[piece dest] [[_ src] _]]
+  (alter (get-in board dest) place piece)
+  (alter (get-in board src ) place :-_)
+  (alter num-moves inc))
+
+(defn update-to-move [move]
+  (alter to-move #(vector (second %) move)))
+
+;; Here there be dragons
+;; With two separate `dosync` forms, our updates are spread across more
+;; than one transaction. This will cause troubles, as we'll see below.
+(defn make-move []
+  (let [move (choose-move @to-move)]
+    (dosync (move-piece move @to-move))
+    (dosync (update-to-move move))))
+
+
+(reset-board!)
+
+(make-move)
+
+(board-map deref board)
+
+(make-move)
+
+(board-map deref board)
+
+;; Things look ok so far...
+;; Let's see what happens when we run it in
+;; a concurrent execution environment
+(dothreads! make-move :threads 100 :times 100)
+
+;; In all likelyhood, this shows us a broken board.
+(board-map deref board)
