@@ -40,3 +40,11 @@ Thread-local                     x
 The value for each reference type is accessed in the same way, using the `@` reader feature or the `deref` function. The write mechanism for each type is unique. All reference types provide *consistency* by allowing the association of a validator function via `setvalidator`.
 
 `ch10_exercises.clj` delves into the details of refs with a mutable game board example.
+
+### Transactions
+
+Clojure's STM doesn't rely on locking mechanisms like Java's `synchronized` so it can't cause deadlocks.
+
+Behind the scenes it uses *multiversion concurrency control (MVCC)* to ensure *snapshot isolation*.
+
+Snapshot isolation means each transaction gets its own view of the data. The snapshot is made up of reference values that only that transaction has access to. Once the transaction completes, the values of the in transaction refs are compared with the target refs. If no conflicts are found, the changes are committed. If there are conflicts the transaction may be retried.
