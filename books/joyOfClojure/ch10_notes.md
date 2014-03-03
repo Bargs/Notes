@@ -48,3 +48,8 @@ Clojure's STM doesn't rely on locking mechanisms like Java's `synchronized` so i
 Behind the scenes it uses *multiversion concurrency control (MVCC)* to ensure *snapshot isolation*.
 
 Snapshot isolation means each transaction gets its own view of the data. The snapshot is made up of reference values that only that transaction has access to. Once the transaction completes, the values of the in transaction refs are compared with the target refs. If no conflicts are found, the changes are committed. If there are conflicts the transaction may be retried.
+
+### Embedded Transactions
+
+Unlike some systems, Clojure doesn't provide allow nested transactions to limit the scope of a restart. If a nested transaction encounters a conflict, the entire enclosing transaction must be restarted. Clojure only has one transaction at a time per thread.
+
