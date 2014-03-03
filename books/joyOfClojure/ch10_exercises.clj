@@ -103,3 +103,26 @@
 
 ;; In all likelyhood, this shows us a broken board.
 (board-map deref board)
+
+
+;; An improved make-move with only one transaction.
+(defn make-move-v2 []
+  (dosync
+   (let [move (choose-move @to-move)]
+     (move-piece move @to-move)
+     (update-to-move move))))
+
+(reset-board!)
+
+(make-move)
+
+(board-map deref board)
+
+@num-moves
+
+(dothreads! make-move-v2 :threads 100 :times 100)
+(board-map #(dosync (deref %)) board)
+
+@to-move
+
+@num-moves
