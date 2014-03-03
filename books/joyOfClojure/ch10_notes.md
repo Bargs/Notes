@@ -65,3 +65,13 @@ Unlike some systems, Clojure doesn't provide allow nested transactions to limit 
 1. Write skew. Only updated refs are checked for conflicts when a transaction commits. So if two transactions run concurrently, one reading a value and the other writing to it, both can commit without conflict. This is undesirable because the behavior of the first transaction is probably affected by the value of the ref, even though it doesn't write to it. This anomaly is called *write skew*.
 
 2. Live lock - a set of transactions that repeatedly restart one another. Clojure combats live lock in a couple ways. One, there are transaction restart limits that will raise an error. Two, Clojure implements *barging* in the STM, which means older transactions are allowed to run while younger transactions have to retry.
+
+
+### Things you shouldn't do in a transaction
+
+1. IO. Transaction retrys could execute the IO operation over and over. When performing IO, it's useful to use the `io!` macro which will throw an error if accidentally used in a transaction.
+
+2. Object mutation. It often isn't idempotent, which will be a problem if the transaction must retry.
+
+3. Large units of work. Get in and get out as quickly as possible.
+
