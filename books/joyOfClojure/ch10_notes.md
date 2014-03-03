@@ -53,3 +53,15 @@ Snapshot isolation means each transaction gets its own view of the data. The sna
 
 Unlike some systems, Clojure doesn't provide allow nested transactions to limit the scope of a restart. If a nested transaction encounters a conflict, the entire enclosing transaction must be restarted. Clojure only has one transaction at a time per thread.
 
+
+### Good things about the STM
+
+1. STM provides your application with a consistent view of its data
+2. No need for locks
+3. Give you the ACI part of ACID
+
+### Bad things about the STM
+
+1. Write skew. Only updated refs are checked for conflicts when a transaction commits. So if two transactions run concurrently, one reading a value and the other writing to it, both can commit without conflict. This is undesirable because the behavior of the first transaction is probably affected by the value of the ref, even though it doesn't write to it. This anomaly is called *write skew*.
+
+2. Live lock - a set of transactions that repeatedly restart one another. Clojure combats live lock in a couple ways. One, there are transaction restart limits that will raise an error. Two, Clojure implements *barging* in the STM, which means older transactions are allowed to run while younger transactions have to retry.
