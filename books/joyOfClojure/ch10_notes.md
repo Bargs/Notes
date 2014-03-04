@@ -91,3 +91,10 @@ The `ref-set` function can be used to set a ref to a provided value, unlike `alt
 ### Stressed refs
 
 You should avoid having both short and long running transactions working with the same ref. When this happens, the short transactions can frustrate the long transaction by changing the value of its ref more times than the ref's history can handle. This causes the long running transaction retry, increasing the ref's history by 1 on each retry up to a certain limit. Clojure provides some tools (demonstrated in `ch10_exercises.clj`) to lessen the pain if it can't be avoided, but if possible it's best to follow the rule of thumb and sidestep the problem entirely.
+
+
+Agents
+------------------------------------------------------
+
+Each agent has a queue which holds actions that will be performed on its value. These actions are performed one at a time, modifying the agent's value for each subsequent action. Actions are queued using the `send` and `send-off` forms. Agents are created with the `agent` function.
+

@@ -161,3 +161,25 @@
 ;; be fairly long, we can start it out at a larger min length instead of increasing
 ;; it each try starting at 0
 (stress-ref (ref 0 :min-history 15 :max-history 30))
+
+
+;; Agents
+
+;; Creating an agent and sending an action to it
+(def joy (agent []))
+(send joy conj "First edition")
+
+@joy
+
+;; Agent actions are asyncronous
+(defn slow-conj [coll item]
+  (Thread/sleep 1000)
+  (conj coll item))
+
+;; The return value will still show the old value of the agent since
+;; the action is still running asyncronously.
+(send joy slow-conj "Second Edition")
+
+;; Execute this a little later, than the new value has taken over
+@joy
+
