@@ -75,3 +75,10 @@ Unlike some systems, Clojure doesn't provide allow nested transactions to limit 
 
 3. Large units of work. Get in and get out as quickly as possible.
 
+
+### Commutative change
+
+If you have an update function that's commutative (order of operands is unimportant) then you can reduce the number of transaction retrys by using the `commute` function instead of `alter`. `commute` will run the update function once on the in-transaction value of the ref and once again on the value of the ref at commit time to determine what value should get committed. This makes your app more concurrent if you can put up with two conditions:
+
+1. The value you see in-transaction may not be the value that gets committed at commit time.
+2. The function you give to `commute` will be run at least twice - once to compute the in-tranaction value, and again to compute the commit value. It might be run any number of times.
