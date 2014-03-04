@@ -82,3 +82,7 @@ If you have an update function that's commutative (order of operands is unimport
 
 1. The value you see in-transaction may not be the value that gets committed at commit time.
 2. The function you give to `commute` will be run at least twice - once to compute the in-tranaction value, and again to compute the commit value. It might be run any number of times.
+
+### Vulgar change
+
+The `ref-set` function can be used to set a ref to a provided value, unlike `alter` and `commute` which take an update function instead of an explicit value.
