@@ -126,3 +126,38 @@
 @to-move
 
 @num-moves
+
+
+;; Stressed refs
+
+;; Runs a slow transaction in a separate thread while a loop with short transactions
+;; quickly modifies the ref the slow transaction is trying to read
+(defn stress-ref [r]
+  (let [slow-tries (atom 0)]
+    (future
+      (dosync
+       (swap! slow-tries inc)
+       (Thread/sleep 200)
+       @r)
+      (println (format "r is: %s, history: %d, after: %d tries"
+                       @r (.getHistoryCount r) @slow-tries)))
+    (dotimes [i 500]
+      (Thread/sleep 10)
+      (dosync (alter r inc)))
+    :done))
+
+;; The long running transaction probably won't finish until the short
+;; transactions are finished
+(stress-ref (ref 0))
+
+;; We can increase the max history for the ref if mixing long and short
+;; transactions is inevitable in our application.
+;; The long transaction manages to finish first here, but it still has
+;; to retry a good number of times.
+(stress-ref (ref 0 :max-history 30))
+
+;; If we're doing real work in the long running transaction, retrying so many
+;; times could get very wasteful. If we know the history is going to have to
+;; be fairly long, we can start it out at a larger min length instead of increasing
+;; it each try starting at 0
+(stress-ref (ref 0 :min-history 15 :max-history 30))
