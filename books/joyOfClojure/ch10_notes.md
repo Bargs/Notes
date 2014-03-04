@@ -62,7 +62,7 @@ Unlike some systems, Clojure doesn't provide allow nested transactions to limit 
 
 ### Bad things about the STM
 
-1. Write skew. Only updated refs are checked for conflicts when a transaction commits. So if two transactions run concurrently, one reading a value and the other writing to it, both can commit without conflict. This is undesirable because the behavior of the first transaction is probably affected by the value of the ref, even though it doesn't write to it. This anomaly is called *write skew*.
+1. Write skew. Only updated refs are checked for conflicts when a transaction commits. So if two transactions run concurrently, one reading a value and the other writing to it, both can commit without conflict. This is undesirable because the behavior of the first transaction is probably affected by the value of the ref, even though it doesn't write to it. This anomaly is called *write skew*. Sometimes write skew is dealt with by writing a dummy value to the read-only ref, but Clojure has a more efficient way to accomplish this with the function `ensure`. `ensure` will guarantee that a read-only ref isn't updated by another thread during the transaction.
 
 2. Live lock - a set of transactions that repeatedly restart one another. Clojure combats live lock in a couple ways. One, there are transaction restart limits that will raise an error. Two, Clojure implements *barging* in the STM, which means older transactions are allowed to run while younger transactions have to retry.
 
