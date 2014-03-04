@@ -98,3 +98,6 @@ Agents
 
 Each agent has a queue which holds actions that will be performed on its value. These actions are performed one at a time, modifying the agent's value for each subsequent action. Actions are queued using the `send` and `send-off` forms. Agents are created with the `agent` function.
 
+Agents can be useful to serialize access to a resource. With explicit locks there would be a danger of deadlock if multiple locks were in play, and even without multiple locks you'd risk having some threads starve while waiting for the lock. Because agents are asynchronous and require no lock, neither of these are a problem. In other languages you might write a queue to deal with these problems, but agents give you the same behavior for free.
+
+If for some reason you need to block until an action has been performed by an agent, you can use `await` and `await-for` to wait until all the actions the thread has sent to a set of agents have completed. `await-for` is the same as await except you can specify a time out.
