@@ -101,3 +101,10 @@ Each agent has a queue which holds actions that will be performed on its value. 
 Agents can be useful to serialize access to a resource. With explicit locks there would be a danger of deadlock if multiple locks were in play, and even without multiple locks you'd risk having some threads starve while waiting for the lock. Because agents are asynchronous and require no lock, neither of these are a problem. In other languages you might write a queue to deal with these problems, but agents give you the same behavior for free.
 
 If for some reason you need to block until an action has been performed by an agent, you can use `await` and `await-for` to wait until all the actions the thread has sent to a set of agents have completed. `await-for` is the same as await except you can specify a time out.
+
+
+### send vs send-off
+
+Using `send-off` will put an action on an agent's queue which gets worked by a single thread assigned to that agent. Every agent gets one of these threads, without limit. In contrast, `send` will put an action on an agent's queue which must be worked by a thread from a shared pool. The size of this pool is based on the number of processors assigned to the JVM.
+
+If you give a blocking action to `send`, it can clog up the pool for all of the agents in the system. So, `send` should be used for actions that don't block, and `send-off` should be used for actions that might block (ex. on I/O), sleep, or generally tie up the thread.

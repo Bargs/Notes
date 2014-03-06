@@ -183,3 +183,21 @@
 ;; Execute this a little later, than the new value has taken over
 @joy
 
+
+;; send vs send-off
+
+(defn exercise-agents [send-fn]
+  (let [agents (map #(agent %) (range 10))]
+    (doseq [a agents]
+      (send-fn a (fn [_] (Thread/sleep 1000))))
+    (doseq [a agents]
+      (await a))))
+
+;; send-off will complete in about a second since each
+;; agent gets its own thread.
+(time (exercise-agents send-off))
+
+;; send will take longer because all the agents must run
+;; their actions on a shared thread pool, and the sleeps
+;; will clog up the pool.
+(time (exercise-agents send))
