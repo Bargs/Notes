@@ -108,3 +108,20 @@ If for some reason you need to block until an action has been performed by an ag
 Using `send-off` will put an action on an agent's queue which gets worked by a single thread assigned to that agent. Every agent gets one of these threads, without limit. In contrast, `send` will put an action on an agent's queue which must be worked by a thread from a shared pool. The size of this pool is based on the number of processors assigned to the JVM.
 
 If you give a blocking action to `send`, it can clog up the pool for all of the agents in the system. So, `send` should be used for actions that don't block, and `send-off` should be used for actions that might block (ex. on I/O), sleep, or generally tie up the thread.
+
+### Failures in an agent action
+
+Since agent actions happen asynchronously, exceptions won't bubble up the call stack in a way that your code can handle. Agents have two different error handling modes to deal with this problem:
+
+1. :fail - new agents default to this mode. When an exception is thrown the agent holds on to it and goes into a *failed* or *stopped* state and stops processing actions. The exception can be manually inspected with the `agent-error` function, and it can be manually restarted with the `restart-agent` function.
+
+2. :continue - any action throwing an exception is skipped and the agent continues processing. This is usually useful when combined with an `:error-handler` function. These functions take the agent and the exception as arguments and can take some sort of action, like logging an error message.
+
+### When not to use agents
+
+Agents shouldn't be used as a simple mechanism for creating new threads. If an agent is being used in a way where its value is unimportant, it's probably being abused. These roles are usually better filled by a pure Java Thread, or an executor or maybe a Clojure future.
+
+You shouldn't try to make agents synchronous by abusing `await`. If you find yourself using `await` frequently, there may be a more suitable reference type to use like atoms which are shared and uncoordinated like agents, but also synchronous by nature.
+
+Atoms
+------------------------------------------------------
