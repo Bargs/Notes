@@ -125,3 +125,10 @@ You shouldn't try to make agents synchronous by abusing `await`. If you find you
 
 Atoms
 ------------------------------------------------------
+
+Atoms are synchronous (like refs) but uncoordinated (like agents).
+
+> Anywhere you might want to atomically compute a value given an exisiting value and swap in the new value, an atom will suffice.
+
+An update to an atom will retry if the value of the atom was changed by another thread while the current computation was executing. This doesn't happen through the STM though, so you must be careful when using atoms in a transcation. If the transaction is retried, the atom may be updated multiple times, which should be regarded as a side effect. Only put an atom update in a transaction if it is idempotent.
+
