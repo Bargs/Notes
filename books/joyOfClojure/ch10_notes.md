@@ -132,5 +132,5 @@ Atoms are synchronous (like refs) but uncoordinated (like agents).
 
 > Atoms are thread-safe and can be used when you require a lightweight mutable reference to be shared across threads.
 
-An update to an atom will retry if the value of the atom was changed by another thread while the current computation was executing. This doesn't happen through the STM though, so you must be careful when using atoms in a transcation. If the transaction is retried, the atom may be updated multiple times, which should be regarded as a side effect. Only put an atom update in a transaction if it is idempotent.
+An update to an atom will retry if the value of the atom was changed by another thread while the current computation was executing. This doesn't happen through the STM though, so you must be careful when using atoms in a transcation. If the transaction is retried, the atom may be updated multiple times, which should be regarded as a side effect. Only put an atom update in a transaction if it is idempotent. An example of such an idempotent action is memoization, which there is an example of in `ch10_exercises.clj`.
 
