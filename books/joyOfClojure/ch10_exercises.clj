@@ -229,3 +229,46 @@
 (meta sometimes-slowly)
 
 (time [(sometimes-slowly 108) (sometimes-slowly 108)])
+
+
+;; Using locks
+
+(ns joy.locks
+  (:refer-clojure :exclude [aget aset count seq])
+  (:require [clojure.core :as clj])
+  (:use [joy.mutation :only (dothreads!)]))
+
+;; Creating a protocol for the safe concurrent modification of arrays
+(defprotocol SafeArray
+  (aset [this i f])
+  (aget [this i])
+  (count [this])
+  (seq [this]))
+
+;; This won't work very well
+(defn make-dumb-array [t sz]
+  (let [a (make-array t sz)]
+    (reify
+      SafeArray
+      (count [_] (clj/count a))
+      (seq [_] (clj/seq a))
+      (aget [_ i] (clj/aget a i))
+      (aset [this i f]
+            (clj/aset a
+                      i
+                      (f (aget this i)))))))
+
+;; Abuse our new protocol implementation a bit
+(defn pummel [a]
+  (dothreads! #(dotimes [i (count a)] (aset a i inc))
+              :threads 100))
+
+(def D (make-dumb-array Integer/TYPE 8))
+
+;; Let 'er rip
+(pummel D)
+
+;; Running that function in 100 concurrent threads should result in
+;; the value 100 being in each index of the array. As you can see, that
+;; is not the case.
+(seq D)
