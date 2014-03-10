@@ -134,3 +134,8 @@ Atoms are synchronous (like refs) but uncoordinated (like agents).
 
 An update to an atom will retry if the value of the atom was changed by another thread while the current computation was executing. This doesn't happen through the STM though, so you must be careful when using atoms in a transcation. If the transaction is retried, the atom may be updated multiple times, which should be regarded as a side effect. Only put an atom update in a transaction if it is idempotent. An example of such an idempotent action is memoization, which there is an example of in `ch10_exercises.clj`.
 
+
+Locks
+------------------------------------------------------
+
+Despite the plethora of Clojure concurrency tools, sometimes you still have to rely on explicit locks. One such situation is the concurrent modification of arrays. `ch10_exercises.clj` works through this scenario.
