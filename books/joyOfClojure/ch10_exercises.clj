@@ -296,3 +296,46 @@
 (pummel A)
 
 (seq A)
+
+
+;; Creating a finer grained locking system using java.util.concurrent
+
+(defn lock-i [target-index num-locks]
+  (mod target-index num-locks))
+
+(import 'java.util.concurrent.locks.ReentrantLock)
+
+;; We'll use a pool of locks equal to half the size of the array count.
+;; This is called lock striping.
+;; Note the release of locks in finally blocks to prevent leaking locks
+;; in the case of errors.
+(defn make-smart-array [t sz]
+  (let [a (make-array t sz)
+        Lsz (/ sz 2)
+        L (into-array (take Lsz
+                            (repeatedly #(ReentrantLock.))))]
+    (reify
+      SafeArray
+      (count [_] (clj/count a))
+      (seq [_] (clj/seq a))
+      (aget [_ i]
+            (let [lk (clj/aget L (lock-i (inc i) Lsz))]
+              (.lock lk)
+              (try
+                (clj/aget a i)
+                (finally (.unlock lk)))))
+      (aset [this i f]
+            (let [lk (clj/aget L (lock-i (inc i) Lsz))]
+              (.lock lk)
+              (try
+                (clj/aset a
+                          i
+                          (f (aget this i)))
+                (finally (.unlock lk))))))))
+
+
+(def S (make-smart-array Integer/TYPE 8))
+
+(pummel S)
+
+(seq S)

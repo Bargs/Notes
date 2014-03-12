@@ -143,3 +143,5 @@ Despite the plethora of Clojure concurrency tools, sometimes you still have to r
 > Currently, the only way to safely modify and see consistent values for a mutable object (such as an array or a class instance) across threads in Clojure is through locking. Wrapping a mutable object in a Clojure reference type provides absolutely no guarantees for safe concurrent modification.
 
 When you have to use locks, Clojure's `locking` macro is the way to go. One nice thing about `locking` is that it always releases its lock at the end of the block.
+
+`locking` is simple but if you want more fine grained control (e.g. locks per array slot instead of one for the entire array) you have to dip into Java's locking mechanisms. `java.util.concurrent.locks` provides a set of explicit locks that we'll use in `ch10_exercises.clj`.
