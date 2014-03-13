@@ -145,3 +145,18 @@ Despite the plethora of Clojure concurrency tools, sometimes you still have to r
 When you have to use locks, Clojure's `locking` macro is the way to go. One nice thing about `locking` is that it always releases its lock at the end of the block.
 
 `locking` is simple but if you want more fine grained control (e.g. locks per array slot instead of one for the entire array) you have to dip into Java's locking mechanisms. `java.util.concurrent.locks` provides a set of explicit locks that we'll use in `ch10_exercises.clj`.
+
+
+Vars and Dynamic Binding
+------------------------------------------------------
+
+Vars have two useful properties:
+
+1. Vars can be named and interned in a namespace.
+2. Dynamic vars can provide thread-local state.
+
+The first point makes vars different than other reference types. Other reference objects aren't named, they're stored in something with a name. So evaluating their name returns the reference object, not its value. You must use `deref` to get its value. Vars are the opposite since they're named. Evaluating their name will return their value. To get the var object itself, you must use the `var` operator.
+
+Vars are created with `def`, or one of its other forms like `defn`, `defmacro`, `defonce`, `defmulti`, etc. Clojure sets the root binding of the var to the given value, using the existing var in the namespace if one exists or creating a new one.
+
+Vars don't *have* to be named and interned in a namespace. You can create anonymous vars with the `with-local-vars` macro. This macro creates a var and gives it thread-local binding without interning it in a namespace. Because its only bound to a local, the var's value won't be implicitly looked up by symbolic name, meaning you have to use `deref` or `var-get` with these anonymous vars.

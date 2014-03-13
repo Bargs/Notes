@@ -339,3 +339,45 @@
 (pummel S)
 
 (seq S)
+
+
+;; Vars
+
+;; Evaluating a var's name gives you its value
+*read-eval*
+
+;; To get the var object itself, you must use the `var` operator
+(var *read-eval*)
+
+;; #' is a reader feature. It is the same as the `var` operator.
+#'*read-eval*
+
+;; The binding macro
+(defn print-read-eval []
+  (println "*read-eval* is currently" *read-eval*))
+
+;; `binding` can be used to bind a new value to a var in thread local
+;; That value will remain in effect until the `binding` block is done
+(defn binding-play []
+  (print-read-eval)
+  (binding [*read-eval* false]
+    (print-read-eval))
+  (print-read-eval))
+
+(binding-play)
+
+;; Vars are created with def and its other forms
+(def foo 3)
+foo
+#'foo
+(var foo)
+'foo
+
+;; Anonymous vars (bound to locals, no namespace or name) can be created
+;; with `with-local-vars`. To get the value of these vars you must use
+;; `deref` or `var-get`.
+(def x 42)
+{:outer-var-value x
+ :with-locals (with-local-vars [x 9]
+                {:local-var x
+                 :local-var-value (var-get x)})}
