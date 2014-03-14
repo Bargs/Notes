@@ -381,3 +381,31 @@ foo
  :with-locals (with-local-vars [x 9]
                 {:local-var x
                  :local-var-value (var-get x)})}
+
+
+;; Dynamic scope
+
+;; `with-precision` uses `binding` to set `clojure.core/*math-context*`
+;; Without it, dividing a BigDecimal might complain
+(/ 1M 3)
+
+;; By setting the *math-context* var we tell BigDecimal how to round
+(with-precision 4 (/ 1M 3))
+
+;; But here's where the dynamic binding of vars can get complext
+;; This blows up because `map` is lazy. By the time the REPL tries to
+;; realize the lazy seq returned by `map`, it has already left the
+;; *dynamic scope* of `with-precision`. Because *math-context* is a var
+;; it doesn't care that it's in the lexical scope of `with-precision`.
+(with-precision 4
+  (map (fn [x] (/ x 3)) (range 1M 4M)))
+
+;; One solution is to force map not to be lazy with `do-all`
+(with-precision 4
+  (doall (map (fn [x] (/ x 3)) (range 1M 4M))))
+
+
+;; But that's not really ideal. Instead, we can tell the function
+;; passed to map to use the dynamic scope that it was created in
+(with-precision 4
+  (map (bound-fn [x] (/ x 3)) (range 1M 4M)))
