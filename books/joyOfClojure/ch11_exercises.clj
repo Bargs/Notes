@@ -86,3 +86,38 @@
 (occurrences title "released"
              "http://blog.fogus.me/feed/"
              "http://feeds.feedburner.com/ElixirLang")
+
+
+;; Promises
+
+;; Defining a utility that will let us throw a bunch of
+;; threads at a given function
+(ns joy.mutation
+  (:import java.util.concurrent.Executors))
+
+(def thread-pool
+  (Executors/newFixedThreadPool
+   (+ 2 (.availableProcessors (Runtime/getRuntime)))))
+
+(defn dothreads!
+  [f & {thread-count :threads
+        exec-count :times
+        :or {thread-count 1 exec-count 1}}]
+  (dotimes
+    [t thread-count]
+    (.submit thread-pool #(dotimes [_ exec-count] (f)))))
+
+
+(def x (promise))
+(def y (promise))
+(def z (promise))
+
+(dothreads! #(deliver z (+ @x @y)))
+
+(dothreads!
+ #(do (Thread/sleep 2000) (deliver x 52)))
+
+(dothreads!
+ #(do (Thread/sleep 4000) (deliver y 86)))
+
+(time @z)
