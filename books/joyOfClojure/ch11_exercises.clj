@@ -121,3 +121,44 @@
  #(do (Thread/sleep 4000) (deliver y 86)))
 
 (time @z)
+
+
+;; Creating a macro like as-futures for promises
+;;
+;; Creates a promise for each task passed in and delivers
+;; the value for each promise by evaluating the task with
+;; dothreads!. Executes body with the collection of promises
+;; bound to the symbol passed as the 4th arg in the vector.
+(defmacro with-promises [[n tasks _ as] & body]
+  (when as
+    `(let [tasks# ~tasks
+           n# (count tasks#)
+           promises# (take n# (repeatedly promise))]
+       (dotimes [i# n#]
+         (dothreads!
+          (fn []
+            (deliver (nth promises# i#)
+                     ((nth tasks# i#))))))
+       (let [~n tasks#
+             ~as promises#]
+         ~@body))))
+
+
+;; Use our new macro in a simple test runner
+(defrecord TestRun [run passed failed])
+
+(defn pass [] true)
+
+(defn fail [] false)
+
+(defn run-tests [& all-tests]
+  (with-promises
+    [tests all-tests :as results]
+    (into (TestRun. 0 0 0)
+          (reduce #(merge-with + %1 %2) {}
+                  (for [r results]
+                    (if @r
+                      {:run 1 :passed 1}
+                      {:run 1 :failed 1}))))))
+
+(run-tests pass fail fail fail pass)
