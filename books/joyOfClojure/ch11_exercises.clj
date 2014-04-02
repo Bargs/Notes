@@ -195,3 +195,22 @@
 (def count-items (cps->fn tweet-items count))
 
 (count-items "https://api.twitter.com/1/statuses/user_timeline.rss?user_id=46130870")
+
+
+;; Creating deadlocks
+
+;; This code will deadlock, run at your own peril.
+
+(def kant (promise))
+(def hume (promise))
+
+(dothreads!
+ #(do (println "Kant has" @kant) (deliver hume :thinking)))
+
+(dothreads!
+ #(do (println "Hume is" @hume) (deliver kant :fork)))
+
+@kant
+
+;; The book claims that deadlocks with promises are always deterministic.
+;; I don't quite understand that yet.
