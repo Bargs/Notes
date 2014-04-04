@@ -53,3 +53,14 @@ For var in object enumerates the property names of an object, not the values of 
 
 
 An expression statement can either assign values to one or more variables or members, invoke a method, delete a property from an object. The = operator is used for assignment.
+
+
+## Expressions
+
+The `typeof` operator produces the values 'number', 'string', 'boolean', 'undefined', 'function', and 'object'. null and arrays return 'object'
+
+Using `.` or `[]` to specify a property or element of an object or array is called *refinement*.
+
+Object property names in object literals must be known at compile time because they are treated as literal names, not variable names.
+
+Function literals can optionally include a name that the function can use to call itself recursively.
