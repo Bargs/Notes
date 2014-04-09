@@ -37,6 +37,7 @@ When a function is invoked, it receives two special parameters:
 
 The value of `this` depends on the *invocation pattern*. There are 4 of these patterns in JS.
 
+> Methods that get their object context from `this` are called public methods.
 
 ### Method invocation pattern
 
@@ -60,4 +61,37 @@ Use of `new` is not recommended, better alternatives are discussed in ch 5.
 
 Since functions are objects, they can have methods. All JS functions have an `apply` method. `apply` takes two args, a value to bind to `this` and an array of parameters. See example in `ch4_exercises.js`.
 
-> Methods that get their object context from this are called public methods.
+
+Arguments
+------------------------
+
+The special `arguments` parameter contains an array of all of the arguments that a function was called with, including any exess arguments. That allows you to create functions that take a variable number of args.
+
+**Note**: `arguments` isn't really an array, but an array-like object. It has a length property but no array methods.
+
+
+Return
+-----------------------
+
+Functions always return a value. The value can be specified with `return`, which will stop the execution of the function and return. If `return` isn't used, the function returns `unefined`, unless `new` was used to invoke the funciton, in which case `this` is returned as long as the `return` value isn't an object.
+
+
+Exceptions
+-----------------------
+
+JS has pretty typical try/catch exceptions. Exceptions are just regular objects, that should have `name` and `message` properties (I think this is just convention). Exceptions thrown in a try block will be caught by the corresponding catch block.
+
+Augmenting Types
+---------------------
+
+You can add new methods to JS types by editing their prototype properties.
+
+
+Scope
+---------------------
+
+JavaScript does not have block scope. It has function scope.
+
+> That means that the parameters and variables defined in a function are not visible outside of the function, and that a variable defined anywhere within a function is visible everywhere within the function.
+
+As a result, all variables in a function should be declared at the top of the function body. Unless, of course, they're being declared in another nested function, in which case they should be declared at the top of the nested function's body.

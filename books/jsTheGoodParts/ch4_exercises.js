@@ -75,3 +75,67 @@ var statusObject = {
 // that doesn't directly contain or inherit the method.
 // That reminds me a bit of Clojure's ability to extend protocols to existing classes.
 Quo.prototype.get_status.apply(statusObject);
+
+
+// Accepting a variable number of args by using `arguments`
+var sum = function () {
+  var i, sum = 0;
+
+  for (i = 0; i < arguments.length; i += 1) {
+    sum += arguments[i];
+  }
+
+  return sum;
+}
+
+sum(4, 8, 15, 16, 23, 42);
+
+
+// JS Exceptions
+
+var add = function (a, b) {
+  if (typeof a !== 'number' || typeof b !== 'number') {
+    throw {
+      name: 'TypeError',
+      message: 'add needs numbers'
+    };
+  }
+  return a + b;
+}
+
+var try_it = function () {
+  try {
+    add("seven");
+  } catch (e) {
+    document.writeln(e.name + ': ' + e.message);
+  }
+}
+
+try_it();
+
+
+// Scope
+
+var foo = function () {
+
+  var a = 3, b = 5;
+
+  var bar = function () {
+
+    var b = 7, c = 11;
+
+    // a is 3, b is 7, c is 11
+
+    a += b + c;
+
+    // a is 21, b is 7, c is 11
+
+  };
+
+  // a is 3, b is 5, c is not defined
+
+  bar();
+
+  // a is 21, b is 5
+
+}
