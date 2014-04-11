@@ -101,3 +101,12 @@ Closure
 ---------------------
 
 Closure occurs when a function has access to the context in which it was created.
+
+
+Modules
+---------------------
+
+A *module* is a function or object that has a public interface with private internals. We can create modules in JS using functions and closure. Modules can help us eliminate global state.
+
+
+

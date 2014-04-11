@@ -225,3 +225,72 @@ var add_the_handlers = function (nodes) {
     modes[i].onclick = helper(i);
   }
 };
+
+
+// Modules
+
+// Creating a "deentityify" module for String objects.
+// Our method needs a map of html entities to the equivalent strings.
+// We could store it in a global var, but that would make our code brittle.
+// We could define the map as a literal in the function itself, but then the map
+// would get recreated on every method invocation. Instead, we'll only create the map
+// once and hide it away where only the method can use it, by using closure.
+// Modules follow this general pattern; a function defines some private vars and
+// functions, creates some privileged functions that will have access to the privates
+// via closure, and returns the privileged functions or stores them an an accessible
+// place.
+String.prototype.deentityify = (function () {
+
+  var entity = {
+    quot: '"',
+    lt: '<',
+    gt: '>'
+  };
+
+  return function () {
+    return this.replace(/&([^&;]+);/g,
+                         function (a, b) {
+                           var r = entity[b];
+                           return typeof r === 'string' ? r : a;
+                         }
+                       );
+  };
+}());
+
+'&lt;&quot;&gt;'.deentityify();
+
+
+// Modules are useful for information hiding and encapsulation. They can also be
+// used to create secure objects.
+
+// The following function creates objects that can be used to generate serial numbers
+// without risk of a third party being able to tamper with the generator's internals.
+// Because the seqer functions don't make use of `this`, the `prefix` and `seq`
+// aren't stored as properties of the object. Instead they are vars that only the
+// original functions created inside of `serial_maker` can access. Even if a third-party
+// changed the functions on `seqer`, it still wouldn't grant them access to the private
+// vars.
+var serial_maker = function () {
+  var prefix = '';
+  var seq = 0;
+
+  return {
+    set_prefix: function (p) {
+      prefix = String(p);
+    },
+    set_seq: function (s) {
+      seq = s;
+    },
+    gensym: function () {
+      var result = prefix + seq;
+      seq += 1;
+      return result;
+    }
+  };
+};
+
+var seqer = serial_maker();
+seqer.set_prefix('Q');
+seqer.set_seq(1000);
+seqer.gensym();
+seqer.gensym();
