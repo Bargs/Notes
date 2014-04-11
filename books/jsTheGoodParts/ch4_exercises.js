@@ -1,3 +1,7 @@
+var clearDoc = function () {
+  document.body.innerHTML = "";
+}
+
 var add = function (a, b) {
   return a + b;
 };
@@ -294,3 +298,113 @@ seqer.set_prefix('Q');
 seqer.set_seq(1000);
 seqer.gensym();
 seqer.gensym();
+
+
+// Currying
+
+// It's easy to implement currying in JS
+
+// We have to use `slice` to turn the "array-like" `arguments` parameter into an
+// actual array with will work correctly with the `concat` method.
+Function.prototype.curry = function () {
+  var slice = Array.prototype.slice,
+      args = slice.apply(arguments),
+      that = this;
+
+  return function () {
+    return that.apply(null, args.concat(slice.apply(arguments)));
+  };
+};
+
+var add1 = add.curry(1);
+add1(6);
+
+
+// Memoization
+
+// A fibonacci implementation
+var fib = (function () {
+  var count = 0;
+
+  return {
+    fibonacci: function (n) {
+      count++;
+      return n < 2 ? n : this.fibonacci(n - 1) + this.fibonacci(n - 2);
+    },
+    getCount: function () {
+      return count;
+    }
+  }
+}());
+
+for (var i = 0; i <= 10; i += 1) {
+  document.writeln('// ' + i + ': ' + fib.fibonacci(i));
+}
+
+fib.getCount();
+
+
+// That works fine, but the function gets called over and over with the same parameters,
+// calculating the answer from scrach each time. It gets called 453 times to be exact.
+// We can make fibonacci much more efficient if we memoize it.
+
+var fib2 = (function () {
+  var count = 0, memo = [0, 1];
+
+  return {
+    fibonacci: function (n) {
+      count++;
+      var result = memo[n];
+
+      if (typeof result !== 'number') {
+        result = this.fibonacci(n - 1) + this.fibonacci(n - 2);
+        memo[n] = result;
+      }
+
+      return result;
+    },
+    getCount: function () {
+      return count;
+    }
+  }
+}());
+
+for (var i = 0; i <= 10; i += 1) {
+  document.writeln('// ' + i + ': ' + fib2.fibonacci(i));
+}
+
+// Now the fibonacci function only gets called 29 times.
+fib2.getCount();
+
+
+// We can generalize this to easily gain the benefits of
+// memoization with other functions.
+var memoizer = function (memo, formula) {
+  var recur = function (n) {
+    var result = memo[n];
+    if (typeof result !== 'number') {
+      result = formula(recur, n);
+      memo[n] = result;
+    }
+    return result;
+  };
+  return recur;
+};
+
+// An implementation of fibonacci using our new memoizer
+var fibonacci = memoizer([0, 1], function (recur, n) {
+  return recur(n - 1) + recur(n - 2);
+});
+
+for (var i = 0; i <= 10; i += 1) {
+  document.writeln('// ' + i + ': ' + fibonacci(i));
+}
+
+// Now we can use memoizer to implment other recursive functions
+var factorial = memoizer([1, 1], function (recur, n) {
+  return n * recur(n - 1);
+});
+
+for (var i = 0; i <= 10; i += 1) {
+  document.writeln('// ' + i + ': ' + factorial(i));
+}
