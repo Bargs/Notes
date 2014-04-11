@@ -95,3 +95,9 @@ JavaScript does not have block scope. It has function scope.
 > That means that the parameters and variables defined in a function are not visible outside of the function, and that a variable defined anywhere within a function is visible everywhere within the function.
 
 As a result, all variables in a function should be declared at the top of the function body. Unless, of course, they're being declared in another nested function, in which case they should be declared at the top of the nested function's body.
+
+
+Closure
+---------------------
+
+Closure occurs when a function has access to the context in which it was created.

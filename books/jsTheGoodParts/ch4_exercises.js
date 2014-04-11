@@ -139,3 +139,89 @@ var foo = function () {
   // a is 21, b is 5
 
 }
+
+
+// Closures
+// The following function returns and object with two functions that are closures
+// They have access to the value var defined in the constructor function, but it's hidden
+// from everyone else. This is a way to create private members in JS.
+var myObject = (function () {
+  var value = 0;
+
+  return {
+    increment: function (inc) {
+      value += typeof inc === 'number' ? inc : 1;
+    },
+    getValue: function () {
+      return value;
+    }
+  };
+}());
+
+
+// Creating a better quo, with a private status data member
+var quo = function (status) {
+  return {
+    get_status: function () {
+    return status;
+    }
+  };
+};
+
+quo("amazed").get_status();
+
+
+// A more useful example using closures
+// Sets a DOM node to yellow then fades to white
+var fade = function (node) {
+  var level = 1;
+  var step = function () {
+    var hex = level.toString(16);
+    node.style.backgroundColor = '#FFFF' + hex + hex;
+    if (level < 15) {
+      level += 1;
+      setTimeout(step, 100);
+    }
+  };
+  setTimeout(step, 100);
+};
+
+fade(document.body);
+
+
+// Note that closures have access to the original parameters from the environment they
+// were created in, NOT copies. If you expect a closure to contain a copy of the parameter
+// from the time the closure was created, you'll run into erros like the following:
+
+// The following code is supposed to create event handlers for onClick for an array of nodes.
+// Each event handler should pop up an alert box with the node's index in the array. Instead
+// each alert box will always display the array's length, because the code mistakenly assumes
+// that each closure gets a copy of the var i, instead of the original which is getting updated
+// with each iteration of the for loop.
+
+var add_the_handlers = function (nodes) {
+  var i;
+  for (i = 0; i < nodes.length; i += 1) {
+    nodes[i].onclick = function (e) {
+      alert(i);
+    };
+  }
+};
+
+
+// This is a better example, that correctly implements the desired functionality.
+// It works because passing `i` to `helper` binds the value of the outer `i` local var
+// to helper's `i` param, which is a new, different var inside helper. The function
+// returned by `helper` closes over the `i` param, instead of the original `i` var.
+var add_the_handlers = function (nodes) {
+  var helper = function (i) {
+    return function (e) {
+      alert(i);
+    };
+  };
+
+  var i;
+  for (i = 0; i < nodes.length; i += 1) {
+    modes[i].onclick = helper(i);
+  }
+};
