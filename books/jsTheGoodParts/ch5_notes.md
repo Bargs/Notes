@@ -20,3 +20,8 @@ Where `this` refers to the new function object.
 This `prototype` object is where inherited properties need to be placed. Every function gets a `prototype` property, but it's only important for functions that are to be used as constructors.
 
 
+Object Specifiers
+--------------------------
+
+JS doesn't have named parameters, but you can fake it by passing a single object arg with the real paramters as properties. This makes long argument lists more readable, less error prone, and makes optional arguments a possibility. This pattern can also be useful when combined with JSON, because an object represented in JSON could be passed as an object specifier to a function to create a full fledged object with data and methods.
+
