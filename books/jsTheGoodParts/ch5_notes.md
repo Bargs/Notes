@@ -30,3 +30,20 @@ Prototypal
 ---------------------
 
 Classes do not exist. A new object can inherit the properties of an old object.
+
+
+Functional
+--------------------
+
+The inhertance patterns so far have no sense of privacy. The functional pattern fixes this by applying the module pattern.
+
+We'll create a function that produces objects, without the use of `new`, in 4 steps.
+
+1. It creats an object.
+2. It optionally defines private variables and methods.
+3. It augments the new object with methods. These will be public methods with privileged access to the private memebers defined in #2.
+4. It returns the new object.
+
+If all of the state of an object is private, then the object is tamper-proof. If all of the methods of the object make no use of `this` or `that`, then the object is *durable*. A durable object is a collection of functions that act as *capabilities*. A durable object can't be compromised because its internal state cannot be accessed in any way other than through its methods.
+
+
