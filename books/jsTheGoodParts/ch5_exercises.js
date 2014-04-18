@@ -157,3 +157,95 @@ var block = function () {
   advance('}');
   scope = oldScope;
 }
+
+
+// Functional pattern
+
+// Pseudocode for the general pattern
+// var constructor = function (spec, my) {
+//   var that, other private instance variables;
+//   my = my || {};
+
+//   Add shared variables and functions to my
+
+//   that = a new object;
+
+//   Add privileged methods to that
+
+//   return that;
+// };
+
+// `that` is the object being constructed.
+// `spec` is an object spec that contains all of the information that the constructor needs
+//   to make an instance. It could also be a single value if a spec object is not needed.
+// `my` is a container of secrets that are shared by the constructors in the inheritance chain.
+//   For instance, if you call another constrcutor (a super constructor) to create `that`, you could
+//   pass `my` to it to share details. Use of `my` is optional.
+
+// A real code example
+
+// All of our data members are private now
+var mammal = function (spec) {
+  var that = {};
+
+  that.get_name = function () {
+    return spec.name;
+  };
+
+  that.says = function () {
+    return spec.saying || '';
+  };
+
+  return that;
+};
+
+var myMammal = mammal({name: 'Herb'});
+
+myMammal.get_name();
+
+// Extending mammal
+var cat = function (spec) {
+  spec.saying = spec.saying || 'meow';
+  var that = mammal(spec);
+  that.purr = function (n){
+    var i, s = '';
+    for (i = 0; i < n; i += 1) {
+      if (s) {
+        s += '-';
+      }
+      s += 'r';
+    }
+    return s;
+  };
+  return that;
+};
+
+var myCat = cat({name: 'Henrietta'});
+myCat.get_name();
+myCat.purr(5);
+myCat.says();
+
+// The functional pattern supports super methods as well
+
+// A `superior` method will give us the ability to generate a function that when called will
+// invoke a super method of our choice on the given object.
+Object.method('superior', function (name) {
+  var that = this,
+      method = that[name];
+  return function () {
+    return method.apply(that, arguments);
+  };
+});
+
+// Now we'll use it to create a coolcat who's get_name method will call its super method.
+var coolcat = function (spec) {
+  var that = cat(spec),
+      super_get_name = that.superior('get_name');
+  that.get_name = function (n) {
+    return 'like ' + super_get_name() + ' baby';
+  };
+  return that;
+};
+
+var myCoolCat = coolcat({name: 'Bix'});
+myCoolCat.get_name();
