@@ -46,4 +46,7 @@ We'll create a function that produces objects, without the use of `new`, in 4 st
 
 If all of the state of an object is private, then the object is tamper-proof. If all of the methods of the object make no use of `this` or `that`, then the object is *durable*. A durable object is a collection of functions that act as *capabilities*. A durable object can't be compromised because its internal state cannot be accessed in any way other than through its methods.
 
+Parts
+--------------
 
+Objects can also be composed out of a set of parts. An example of this is shown in `ch5_exercises.js`.
