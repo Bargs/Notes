@@ -71,3 +71,40 @@ numbers[numbers.length - 1]
 // But you can also use Array.prototype's `push` method:
 numbers.push('go');
 numbers
+
+// The `delete` operator can be used on arrays since they're really just objects.
+delete numbers[2];
+numbers
+
+// That leaves a hole in the array though. `splice` can delete elements and
+// replace them with elements to the right. The first arg is an ordinal in the
+// array, the second is the number of elements to delete. This could be an
+// expensive operation for large arrays.
+numbers.splice(2, 1);
+numbers
+
+// The best way to enumerate the elements of a JS array is to use a vanilla `for`
+// loop. `for in` works since arrays are objects, but it makes no guarentee
+// about the order the properties will be enumerated in and it will also
+// include props from the prototype chain.
+
+// JS's `typeof` operator returns "object" for arrays.
+typeof numbers;
+
+// If we want a reliable test, we have to create it ourselves.
+var is_array = function (value) {
+  return value && typeof value === 'object' && value.constructor === Array;
+};
+
+is_array(numbers);
+
+// That implementation doesn't work for arrays created in a different
+// window or frame. Here's one that does.
+var is_array = function (value) {
+  return Object.prototype.toString.apply(value) === '[object Array]';
+};
+
+is_array(numbers);
+
+
+// Because arrays are objects, you can add methods to them.
