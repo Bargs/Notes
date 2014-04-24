@@ -32,3 +32,66 @@ var a = ['a', 'b', 'c'];
 var b = ['x', 'y', 'z'];
 a.push(b, true);
 a
+
+
+// array.reverse()
+// Modifies the array by reversing the elements, returning the array.
+var a = ['a', 'b', 'c'];
+a.reverse();
+
+
+// array.shift()
+// Like pop but it removes the first element. Much slower than pop.
+var a = ['a', 'b', 'c'];
+a.shift();
+a
+
+
+// array.slice(start, end)
+// Returns a copy of the array starting at array[start] and ending at array[end - 1].
+// By default `end` is array.length if an `end` isn't provided.
+var a = ['a', 'b', 'c'];
+a.slice(0, 1);
+a.slice(1);
+a.slice(1, 2);
+
+
+// array.sort(comparefn)
+// Sorts an array in place. The default comparison function assumes the elements are strings, so
+// it sorts numbers incorrectly. You can provide your own compareison function, which should take
+// two parameters, returning 0 if they're equal, a negative number if the first is less, and a
+// positive number if the second parameter is less.
+var n = [4, 8, 15, 16, 23, 42];
+n.sort();
+
+n.sort(function (a, b) {
+  return a - b;
+});
+
+// we can also create a function that sorts strings an numbers
+var m = ['aa', 'bb', 'a', 4, 8, 15, 16, 23, 42];
+m.sort(function (a, b) {
+  if (a === b) {
+    return 0;
+  }
+  if (typeof a === typeof b) {
+    return a < b ? -1 : 1;
+  }
+  return typeof a < typeof b ? -1 : 1;
+});
+
+
+// array.splice(start, deleteCount, item...)
+// removes `deleteCount` number of items from the array starting at `start`, replacing them with
+// any `item`s passed in at the end of the args list. Unlike, `slice`, `splice` modifies the
+// original array. `splice` returns the deleted elements.
+var a = ['a', 'b', 'c'];
+a.splice(1, 1, 'ache', 'bug');
+a
+
+
+// array.unshift(item...)
+// Like `push` but `item`s are added to the front of the array. Returns the arrays new length.
+var a = ['a', 'b', 'c'];
+a.unshift('?', '@');
+a
