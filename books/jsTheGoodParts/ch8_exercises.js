@@ -216,3 +216,61 @@ var b = /&.+;/.test('frank &amp; beans');
 b
 
 
+
+// String methods
+
+// string.charAt(pos)
+// Returns the character at `pos` in the string. If `pos` < 0 or >= string.length the return is the empty string.
+
+var name = 'Curly';
+name.charAt(0);
+name.charAt(-1);
+
+
+// string.charCodeAt(pos)
+// Like charAt but returns the interger representation of the character code
+var name = 'Curly';
+name.charCodeAt(0);
+
+
+// String.concat(string...)
+// Creates a new string by concatenating strings. Same as `+` operator for strings.
+'C'.concat('a', 't');
+
+
+// String.indexOf(searchString, position)
+// Searches for `searchString` returning the position of the first char of the string, or -1 if not matched.
+// `position` causes the search to start at that position.
+var text = 'Mississippi';
+text.indexOf('ss');
+text.indexOf('ss', 3);
+text.indexOf('ss', 6);
+
+
+// string.lastIndexOf(searchString, position)
+// Like indexOf but searches from the end of the string
+var text = 'Mississippi';
+text.lastIndexOf('ss');
+text.lastIndexOf('ss', 3);
+text.lastIndexOf('ss', 6);
+
+
+// string.localeCompare(that)
+// Compares two strings, returning -1 if `this` string is less than `that`, 0 if equal, and 1 if `this` is greater than `that`.
+// The rules for the comparison are not specified.
+
+
+// string.match(regexp)
+// If the regexp has no `g` flag, this works like regexp.exec(string). If there is a `g` flag, it creates an array of the
+// matches with the capture groups excluded.
+
+var text = '<html><body bgcolor=linen><p>' + 'This is <b>bold<\/b>!<\/p><\/body><\/html>';
+var tags = /[^<>]+|<(\/?)([A-Za-z]+)([^<>]*)>/g;
+var a, i;
+
+a = text.match(tags);
+for (i = 0; i < a.length; i += 1) {
+  document.writeln(('// [' + i + '] ' + a[i]).entityify());
+  document.writeln('<br \/>');
+}
+
