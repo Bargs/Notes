@@ -274,3 +274,48 @@ for (i = 0; i < a.length; i += 1) {
   document.writeln('<br \/>');
 }
 
+
+// string.replace(searchValue, replaceValue)
+// `searchValue` can be a string or a regexp object. If it's a string or a regexp without a `g` flag, only the first
+// match will be replaced.
+
+"mother_in_law".replace('_', '-');
+
+// You must use the `g` flag to replace all occurances
+
+"mother_in_law".replace(/_/g, '-');
+
+// `replaceValue` can be a string or a function. `$` has special meaning when it's a string.
+var oldareacode = /\((\d{3})\)/g;
+'(555)666-1212'.replace(oldareacode, '$1-');
+
+// `$$` = $
+// `$&` = The matched text
+// `$ number` = capture group text
+// `$`` = The text preceding the match
+// `$'` = The text following the match
+
+// If `replaceValue` is a function, it is passed the matched text plus any capture groups and
+// its return value is used as the replacement text.
+
+String.prototype.entityify = function ( ) {
+  var character = {
+    '<' : '&lt;',
+    '>' : '&gt;',
+    '&' : '&amp;',
+    '"' : '&quot;'
+  };
+
+  return function ( ) {
+    return this.replace(/[<>&"]/g, function (c) {
+      return character[c];
+    });
+  };
+}( );
+
+"<&>".entityify( );
+
+
+// string.search(regexp)
+// Like the `indexOf` method but with a regexp instead of a string. Returns the
+// index of the first char of the match, or -1 if there is no match. `g` flag is ignored.
