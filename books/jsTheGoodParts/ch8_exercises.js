@@ -319,3 +319,47 @@ String.prototype.entityify = function ( ) {
 // string.search(regexp)
 // Like the `indexOf` method but with a regexp instead of a string. Returns the
 // index of the first char of the match, or -1 if there is no match. `g` flag is ignored.
+
+
+// string.slice(start, end)
+// Makes a new string by copying a portion of the target string. `end` is optional. default is `string.length`.
+// `end` is one greater than the position of the last character
+var text = 'and in it he says "Any damn fool could';
+text.slice(18);
+text.slice(0, 3);
+// `string.length` is added to negative numbers
+text.slice(-5);
+text.slice(19, 32);
+
+
+// string.split(separator, limit)
+// Creates an array of strings by splitting `string` into pieces. `separator` can be a string or a regexp.
+// An empty string separator will create an array of single characters.
+var digits = '0123456789';
+digits.split('', 5);
+
+var ip = '192.168.1.0';
+ip.split('.');
+
+// Result array will include empty strings if separator occurs at very beginning or end of string.
+'|a|b|c|'.split('|');
+
+var text = 'last, first ,middle';
+text.split(/\s*,\s*/);
+
+// Text from capturing groups will be included in the split:
+text.split(/\s*(,)\s*/);
+
+
+// string.substring(start, end)
+// The same as slice but without adjustment for negative params. There's no reason to use substring instead of slice.
+
+// string.toLowerCase()
+// Produces a new string, converting string to lowercase
+
+// string.toUpperCase()
+// Produces a new string, converting string to uppercase
+
+// String.fromCharCode(char...)
+// Creates a string from a series of character codes
+String.fromCharCode(67, 97, 116);
